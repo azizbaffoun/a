@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.MaterielController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10" styleClass="form-container">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="typeField" promptText="Enter material type" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Type Sport:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="typeSportField" promptText="Enter sport type" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Prix:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="prixField" promptText="Enter price" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Date Reservation:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateReservationPicker" promptText="Select date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Statut:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="statutComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Owner Type:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="ownerTypeComboBox" promptText="Select owner type" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER" styleClass="button-container">
+        <Button text="Add" onAction="#handleAdd" styleClass="button-add"/>
+        <Button text="Update" onAction="#handleUpdate" styleClass="button-update"/>
+        <Button text="Delete" onAction="#handleDelete" styleClass="button-delete"/>
+        <Button text="Clear" onAction="#handleClear" styleClass="button-clear"/>
+    </HBox>
+
+    <VBox fx:id="listContainer" VBox.vgrow="ALWAYS">
+        <Label fx:id="listHeader" styleClass="list-header"/>
+        <ListView fx:id="materielListView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</VBox> 

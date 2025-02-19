@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EmpruntController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10" styleClass="form-container">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="User:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="userIDComboBox" promptText="Select user" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Materiel:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="materielComboBox" promptText="Select materiel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Date Emprunt:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateEmpruntPicker" promptText="Select borrow date" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Date Retour:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateRetourPicker" promptText="Select return date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="statutEmpruntComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER" styleClass="button-container">
+        <Button text="Add" onAction="#handleAdd" styleClass="button-add"/>
+        <Button text="Update" onAction="#handleUpdate" styleClass="button-update"/>
+        <Button text="Delete" onAction="#handleDelete" styleClass="button-delete"/>
+        <Button text="Clear" onAction="#handleClear" styleClass="button-clear"/>
+    </HBox>
+
+    <VBox fx:id="listContainer" VBox.vgrow="ALWAYS">
+        <Label fx:id="listHeader" styleClass="list-header"/>
+        <ListView fx:id="empruntListView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</VBox> 
