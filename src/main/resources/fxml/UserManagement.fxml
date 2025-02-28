@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.controllers.UserManagementController"
+      spacing="15" style="-fx-background-color: #FFFFFF; -fx-padding: 20;">
+
+    <!-- Header -->
+    <Text text="User Management" 
+          style="-fx-font-family: 'Roboto'; -fx-font-weight: bold; -fx-font-size: 28px; -fx-fill: #00FF52;"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10">
+        <Button text="Add User" onAction="#showAddUserDialog"
+                style="-fx-background-color: #00FF52; -fx-text-fill: white; -fx-font-family: 'Roboto';
+                       -fx-font-size: 14px; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        <Button text="Edit User" onAction="#showEditUserDialog"
+                style="-fx-background-color: #00FFA3; -fx-text-fill: white; -fx-font-family: 'Roboto';
+                       -fx-font-size: 14px; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        <Button text="Delete User" onAction="#deleteUser"
+                style="-fx-background-color: #FF5252; -fx-text-fill: white; -fx-font-family: 'Roboto';
+                       -fx-font-size: 14px; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        <Button text="Reset Password" onAction="#showResetPasswordDialog"
+                style="-fx-background-color: #00FFA3; -fx-text-fill: white; -fx-font-family: 'Roboto';
+                       -fx-font-size: 14px; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        <Button text="Update Photo" onAction="#showUpdatePhotoDialog"
+                style="-fx-background-color: #00FFA3; -fx-text-fill: white; -fx-font-family: 'Roboto';
+                       -fx-font-size: 14px; -fx-padding: 8 15; -fx-background-radius: 5;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="roleFilter" promptText="Filter by Role"
+                  style="-fx-font-family: 'Merriweather'; -fx-font-size: 14px;"/>
+        <TextField fx:id="searchField" promptText="Search users..."
+                  style="-fx-font-family: 'Merriweather'; -fx-font-size: 14px; -fx-pref-width: 200;
+                         -fx-background-color: #F2F2F2; -fx-padding: 8; -fx-background-radius: 5;"/>
+    </HBox>
+
+    <!-- Users Table -->
+    <TableView fx:id="userTable" VBox.vgrow="ALWAYS" 
+               style="-fx-font-family: 'Merriweather'; -fx-font-size: 13px;">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="nomColumn" text="Last Name" prefWidth="100"/>
+            <TableColumn fx:id="prenomColumn" text="First Name" prefWidth="100"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="150"/>
+            <TableColumn fx:id="genreColumn" text="Gender" prefWidth="80"/>
+            <TableColumn fx:id="numeroTelephoneColumn" text="Phone" prefWidth="100"/>
+            <TableColumn fx:id="adresseColumn" text="Address" prefWidth="150"/>
+            <TableColumn fx:id="roleIDColumn" text="Role" prefWidth="80"/>
+            <TableColumn fx:id="nomOrganisationColumn" text="Organization" prefWidth="150"/>
+            <TableColumn fx:id="photoProfilColumn" text="Photo" prefWidth="100"/>
+        </columns>
+        <styleClass>
+            <String fx:value="table-view"/>
+        </styleClass>
+    </TableView>
+
+    <!-- Status Bar -->
+    <HBox spacing="10" style="-fx-padding: 10; -fx-background-color: #F2F2F2; -fx-background-radius: 5;">
+        <Label fx:id="statusLabel" 
+               style="-fx-font-family: 'Merriweather'; -fx-font-style: italic; -fx-text-fill: #00FF52;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="totalUsersLabel" 
+               style="-fx-font-family: 'Merriweather'; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
+</VBox> 

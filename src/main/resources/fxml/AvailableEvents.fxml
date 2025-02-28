@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.controllers.AvailableEventsController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Text text="Available Events" 
+          style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- Search Box -->
+    <HBox spacing="10">
+        <TextField fx:id="searchField" promptText="Search events..." HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="typeFilter" promptText="Filter by type"/>
+    </HBox>
+
+    <!-- Events Table -->
+    <TableView fx:id="eventsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+            <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="typeColumn" text="Type" prefWidth="100"/>
+            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="100"/>
+            <TableColumn fx:id="venueColumn" text="Venue" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10">
+        <Button text="View Details" onAction="#viewEventDetails"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Join Event" onAction="#joinEvent"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+</VBox> 

@@ -1,0 +1,497 @@
+COMPREHENSIVE IMPLEMENTATION GUIDE FOR PIDEV SYSTEM
+================================================
+
+1. DATABASE SCHEMA AND ENUMS
+---------------------------
+A. Status Enums Implementation
+-----------------------------
+Create the following enum classes in src/main/java/tn/esprit/pidev/enums:
+
+```java
+// ReservationStatus.java
+public enum ReservationStatus {
+    CONFIRMEE("Confirmée"),
+    ANNULEE("Annulée");
+    
+    private final String value;
+    
+    ReservationStatus(String value) {
+        this.value = value;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+}
+
+// Similar implementation for:
+// - MaterielStatus (Disponible, Réservé, Sous maintenance)
+// - BilletStatus (Valide, Annulé, Non valide)
+// - EmpruntStatus (Emprunté, Retourné, En retard)
+// - MaintenanceStatus (En cours, Terminé, Planifié)
+// - TerrainStatus (Disponible, Réservé, Maintenance)
+```
+
+B. Popup Control Types
+---------------------
+```java
+public enum PopupControlType {
+    CONFIRMATION,
+    ERROR,
+    WARNING,
+    INFO,
+    MAINTENANCE_ALERT,
+    RESERVATION_CONFIRMATION,
+    DATE_ERROR,
+    VALIDATION_ERROR
+}
+```
+
+2. DATE VALIDATION IMPLEMENTATION
+-------------------------------
+A. Core Date Validation Utility
+```java
+public class DateValidationUtils {
+    public static boolean isValidFutureDate(LocalDateTime date) {
+        return date != null && date.isAfter(LocalDateTime.now());
+    }
+    
+    public static boolean isValidDateRange(LocalDateTime start, LocalDateTime end) {
+        return start != null && end != null && 
+               start.isAfter(LocalDateTime.now()) && 
+               end.isAfter(start);
+    }
+}
+```
+
+B. Table-Specific Validation
+```java
+// Implement in respective service classes:
+- BilletService: dateAchat validation
+- EmpruntService: dateEmprunt and dateRetour validation
+- EvenementService: dateDebut and dateFin validation
+- MaintenanceService: dateMaintenance validation
+- ReservationService: dateReservation validation
+```
+
+3. CRUD OPERATIONS STANDARDIZATION
+--------------------------------
+A. Base Response Structure
+```java
+public class ApiResponse<T> {
+    private boolean success;
+    private T data;
+    private String message;
+    private LocalDateTime timestamp;
+    private List<String> errors;
+}
+```
+
+B. Standard Service Interface
+```java
+public interface CrudService<T, ID> {
+    ApiResponse<T> create(T entity);
+    ApiResponse<T> read(ID id);
+    ApiResponse<List<T>> readAll();
+    ApiResponse<T> update(ID id, T entity);
+    ApiResponse<Boolean> delete(ID id);
+}
+```
+
+4. VALIDATION FRAMEWORK
+----------------------
+A. Entity Validators
+```java
+public interface EntityValidator<T> {
+    Optional<String> validate(T entity);
+    boolean isValid(T entity);
+}
+```
+
+B. Implementation Example
+```java
+@Component
+public class BilletValidator implements EntityValidator<Billet> {
+    @Override
+    public Optional<String> validate(Billet billet) {
+        StringBuilder errors = new StringBuilder();
+        
+        // Date validation
+        if (!DateValidationUtils.isValidFutureDate(billet.getDateAchat())) {
+            errors.append("Purchase date must be in the future\n");
+        }
+        
+        // Price validation
+        if (billet.getPrix() <= 0) {
+            errors.append("Price must be positive\n");
+        }
+        
+        // Quantity validation
+        if (billet.getQuantite() <= 0) {
+            errors.append("Quantity must be positive\n");
+        }
+        
+        return errors.length() > 0 ? Optional.of(errors.toString()) : Optional.empty();
+    }
+}
+```
+
+5. DATABASE CONSTRAINTS AND TRIGGERS
+---------------------------------
+A. Add Date Constraints
+```sql
+-- Add to your database migration scripts:
+
+-- Billet date constraint
+ALTER TABLE billet
+ADD CONSTRAINT chk_billet_date
+CHECK (dateAchat >= CURRENT_TIMESTAMP);
+
+-- Emprunt date constraints
+ALTER TABLE emprunt
+ADD CONSTRAINT chk_emprunt_dates
+CHECK (dateEmprunt <= dateRetour AND dateEmprunt >= CURRENT_DATE);
+
+-- Event date constraints
+ALTER TABLE evenement
+ADD CONSTRAINT chk_event_dates
+CHECK (dateDebut <= dateFin AND dateDebut >= CURRENT_DATE);
+```
+
+B. Status Update Triggers
+```sql
+DELIMITER //
+
+CREATE TRIGGER before_reservation_update
+BEFORE UPDATE ON reservation
+FOR EACH ROW
+BEGIN
+    IF NEW.dateReservation < CURRENT_TIMESTAMP THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Cannot update reservation to past date';
+    END IF;
+END //
+
+DELIMITER ;
+```
+
+6. ERROR HANDLING
+---------------
+A. Custom Exceptions
+```java
+public class ValidationException extends RuntimeException {
+    private final List<String> errors;
+    
+    public ValidationException(String message, List<String> errors) {
+        super(message);
+        this.errors = errors;
+    }
+}
+
+public class DateValidationException extends ValidationException {
+    public DateValidationException(String message) {
+        super(message, Collections.singletonList(message));
+    }
+}
+```
+
+B. Global Exception Handler
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidationException(
+            ValidationException ex) {
+        ApiResponse<Void> response = new ApiResponse<>();
+        response.setSuccess(false);
+        response.setMessage("Validation failed");
+        response.setErrors(ex.getErrors());
+        return ResponseEntity.badRequest().body(response);
+    }
+}
+```
+
+7. IMPLEMENTATION CHECKLIST
+-------------------------
+[ ] Database Schema Updates
+    [ ] Add date constraints
+    [ ] Add status constraints
+    [ ] Create triggers
+    [ ] Add indexes
+
+[ ] Core Components
+    [ ] Implement enums
+    [ ] Create validation utils
+    [ ] Set up error handling
+    [ ] Implement response structures
+
+[ ] Entity Validation
+    [ ] Billet validation
+    [ ] Emprunt validation
+    [ ] Evenement validation
+    [ ] Reservation validation
+    [ ] Maintenance validation
+
+[ ] Service Layer
+    [ ] Implement CRUD services
+    [ ] Add validation calls
+    [ ] Handle date checks
+    [ ] Add status management
+
+[ ] UI Components
+    [ ] Add date pickers
+    [ ] Implement status dropdowns
+    [ ] Add validation messages
+    [ ] Create popup controls
+
+8. TESTING REQUIREMENTS
+---------------------
+A. Unit Tests
+```java
+@Test
+public void testDateValidation() {
+    LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
+    LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
+    
+    assertFalse(DateValidationUtils.isValidFutureDate(pastDate));
+    assertTrue(DateValidationUtils.isValidFutureDate(futureDate));
+}
+```
+
+B. Integration Tests
+```java
+@SpringBootTest
+public class ReservationServiceIntegrationTest {
+    @Test
+    public void testReservationCreation() {
+        Reservation reservation = new Reservation();
+        reservation.setDateReservation(LocalDateTime.now().plusDays(1));
+        
+        ApiResponse<Reservation> response = reservationService.create(reservation);
+        assertTrue(response.isSuccess());
+    }
+}
+```
+
+9. SECURITY MEASURES
+------------------
+A. Input Validation
+- Implement request validation
+- Add SQL injection prevention
+- Validate date formats
+- Check numeric ranges
+
+B. Access Control
+- Implement role-based access
+- Add audit logging
+- Secure sensitive operations
+
+10. MAINTENANCE GUIDELINES
+------------------------
+A. Code Organization
+- Follow package structure
+- Maintain consistent naming
+- Document changes
+- Update tests
+
+B. Database Maintenance
+- Regular backups
+- Index optimization
+- Query optimization
+- Status cleanup
+
+11. DEPLOYMENT CONSIDERATIONS
+---------------------------
+A. Database Updates
+- Create migration scripts
+- Test constraints
+- Verify triggers
+- Check indexes
+
+B. Application Updates
+- Version control
+- Documentation
+- Backup procedures
+- Rollback plans
+
+12. ADVANCED EVENT RECOMMENDATION ENGINE
+-------------------------------------
+A. Recommendation Algorithm Components
+```java
+public class EventRecommendationEngine {
+    private static final double LOCATION_WEIGHT = 0.3;
+    private static final double EVENT_TYPE_WEIGHT = 0.4;
+    private static final double PARTICIPATION_WEIGHT = 0.3;
+    
+    public List<Evenement> getRecommendations(int userID) {
+        UserPreferences preferences = analyzeUserPreferences(userID);
+        return calculateRecommendations(preferences);
+    }
+}
+```
+
+B. User Preference Analysis
+```java
+public class UserPreferences {
+    private Map<String, Double> eventTypePreferences; // PADEL, TENNIS
+    private Location preferredLocation;
+    private Map<LocalDateTime, Integer> participationFrequency;
+    private List<Integer> pastEventIds;
+}
+
+public class PreferenceAnalyzer {
+    public UserPreferences analyzePreferences(int userID) {
+        // Analyze from database tables:
+        // - jointable (user participation history)
+        // - evenement (event types)
+        // - reservation (frequency)
+        return buildPreferenceProfile();
+    }
+}
+```
+
+C. Database Queries for Analysis
+```sql
+-- User participation history
+SELECT e.type, COUNT(*) as participation_count
+FROM jointable j
+JOIN evenement e ON j.eventID = e.ID
+WHERE j.userID = ?
+GROUP BY e.type;
+
+-- Location preferences
+SELECT t.localisation, COUNT(*) as location_count
+FROM reservationterrain rt
+JOIN terrain t ON rt.terrainID = t.courtID
+WHERE rt.userID = ?
+GROUP BY t.localisation;
+
+-- Participation frequency
+SELECT MONTH(e.dateDebut) as month, COUNT(*) as monthly_count
+FROM jointable j
+JOIN evenement e ON j.eventID = e.ID
+WHERE j.userID = ?
+GROUP BY MONTH(e.dateDebut);
+```
+
+D. Scoring System
+```java
+public class EventScoring {
+    public double calculateEventScore(Evenement event, UserPreferences prefs) {
+        double typeScore = calculateTypeMatchScore(event, prefs);
+        double locationScore = calculateLocationScore(event, prefs);
+        double timeScore = calculateTimePreferenceScore(event, prefs);
+        
+        return (typeScore * EVENT_TYPE_WEIGHT) +
+               (locationScore * LOCATION_WEIGHT) +
+               (timeScore * PARTICIPATION_WEIGHT);
+    }
+}
+```
+
+E. Implementation Requirements
+----------------------------
+1. Data Collection
+   [ ] Track user event views
+   [ ] Record participation history
+   [ ] Monitor location preferences
+   [ ] Store user feedback
+
+2. Analysis Components
+   [ ] Event type analysis
+   [ ] Location clustering
+   [ ] Temporal pattern recognition
+   [ ] Participation frequency analysis
+
+3. Recommendation Generation
+   [ ] Score calculation
+   [ ] Filtering logic
+   [ ] Ranking algorithm
+   [ ] Results caching
+
+4. Database Updates
+```sql
+-- Add view tracking table
+CREATE TABLE event_views (
+    ID int PRIMARY KEY AUTO_INCREMENT,
+    userID int,
+    eventID int,
+    viewTimestamp datetime DEFAULT CURRENT_TIMESTAMP,
+    viewDuration int,
+    FOREIGN KEY (userID) REFERENCES utilisateur(ID),
+    FOREIGN KEY (eventID) REFERENCES evenement(ID)
+);
+
+-- Add user preferences table
+CREATE TABLE user_preferences (
+    userID int PRIMARY KEY,
+    preferredLocation text,
+    preferredEventTypes text,
+    lastUpdateTime datetime,
+    FOREIGN KEY (userID) REFERENCES utilisateur(ID)
+);
+```
+
+F. Performance Optimization
+-------------------------
+1. Caching Strategy
+```java
+@Service
+public class RecommendationCacheService {
+    private Cache<Integer, List<Evenement>> userRecommendations;
+    
+    public void cacheRecommendations(int userID, List<Evenement> recommendations) {
+        userRecommendations.put(userID, recommendations);
+    }
+}
+```
+
+2. Batch Processing
+```java
+@Scheduled(cron = "0 0 2 * * *") // Run at 2 AM daily
+public void updateRecommendations() {
+    List<Integer> activeUsers = getUsersNeedingUpdate();
+    processUserBatch(activeUsers);
+}
+```
+
+G. Testing Scenarios
+------------------
+```java
+@Test
+public void testRecommendationRelevance() {
+    // Given
+    int userID = 1;
+    createTestUserHistory(userID);
+    
+    // When
+    List<Evenement> recommendations = 
+        recommendationEngine.getRecommendations(userID);
+    
+    // Then
+    assertRecommendationQuality(recommendations, userID);
+}
+```
+
+H. Monitoring and Analytics
+-------------------------
+1. Key Metrics
+   - Recommendation acceptance rate
+   - User engagement increase
+   - Event participation correlation
+   - Algorithm performance metrics
+
+2. Feedback Loop
+```java
+public class RecommendationFeedback {
+    public void recordUserAction(int userID, int eventID, UserAction action) {
+        // Track user interactions with recommendations
+        // Update preference weights
+        // Adjust algorithm parameters
+    }
+}
+```
+
+This advanced recommendation engine will enhance user engagement by providing personalized event suggestions based on their historical interactions and preferences. The system continuously learns and adapts to user behavior to improve recommendation accuracy over time.
+
+Would you like me to provide more details about any specific component of the recommendation engine?

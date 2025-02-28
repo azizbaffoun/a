@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.controllers.VenueManagementController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Text text="Venue Management" 
+          style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="10">
+        <Button text="Add Venue" onAction="#showAddVenueDialog"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Edit Venue" onAction="#showEditVenueDialog"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Delete Venue" onAction="#deleteVenue"
+                style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="Schedule Maintenance" onAction="#showMaintenanceDialog"
+                style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ComboBox fx:id="statusFilter" promptText="Filter by Status"/>
+    </HBox>
+
+    <!-- Venues Table -->
+    <TableView fx:id="venueTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="typeColumn" text="Type" prefWidth="150"/>
+            <TableColumn fx:id="locationColumn" text="Location" prefWidth="200"/>
+            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="100"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <!-- Status Bar -->
+    <HBox spacing="10" style="-fx-padding: 5;">
+        <Label fx:id="statusLabel" style="-fx-font-style: italic;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="totalVenuesLabel"/>
+        <Label fx:id="availableVenuesLabel"/>
+    </HBox>
+</VBox> 

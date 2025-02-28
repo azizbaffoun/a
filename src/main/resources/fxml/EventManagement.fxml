@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.effect.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="tn.esprit.pidev.controllers.EventManagementController"
+           styleClass="main-container">
+
+    <VBox spacing="20" styleClass="content-container">
+        <!-- Header -->
+        <HBox styleClass="header-container" alignment="CENTER_LEFT" spacing="20">
+            <Text text="Event Management" styleClass="header-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="searchField" promptText="Search events..." 
+                      styleClass="search-field" prefWidth="300"/>
+        </HBox>
+
+        <!-- Main Content Area -->
+        <HBox spacing="20" VBox.vgrow="ALWAYS">
+            <!-- Left Panel - Event List -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+                <HBox spacing="10" styleClass="action-buttons">
+                    <Button text="Add Event" onAction="#showAddEventDialog"
+                            styleClass="action-button, add-button"/>
+                    <Button text="Edit Event" onAction="#showEditEventDialog"
+                            styleClass="action-button, edit-button"/>
+                    <Button text="Delete Event" onAction="#deleteEvent"
+                            styleClass="action-button, delete-button"/>
+                </HBox>
+
+                <TableView fx:id="eventTable" VBox.vgrow="ALWAYS" styleClass="event-table">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="detailsColumn" text="Details" prefWidth="200"/>
+                        <TableColumn fx:id="startDateColumn" text="Start Date" prefWidth="100"/>
+                        <TableColumn fx:id="endDateColumn" text="End Date" prefWidth="100"/>
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                        <TableColumn fx:id="maxParticipantsColumn" text="Max Participants" prefWidth="120"/>
+                    </columns>
+                    <effect>
+                        <DropShadow color="#00000022" radius="10" spread="0.1"/>
+                    </effect>
+                </TableView>
+            </VBox>
+
+            <!-- Right Panel - Venue Management -->
+            <VBox spacing="10" styleClass="panel" prefWidth="300">
+                <Text text="Venue Management" styleClass="section-header"/>
+                
+                <VBox spacing="10" styleClass="form-container">
+                    <TextField fx:id="venueTypeField" promptText="Venue Type"/>
+                    <TextField fx:id="venueLocationField" promptText="Location"/>
+                    <TextField fx:id="venueCapacityField" promptText="Capacity"/>
+                    <Button text="Add Venue" onAction="#handleAddVenue" 
+                            styleClass="action-button, add-button"/>
+                </VBox>
+
+                <ListView fx:id="venueListView" VBox.vgrow="ALWAYS" 
+                         styleClass="venue-list">
+                    <effect>
+                        <DropShadow color="#00000022" radius="10" spread="0.1"/>
+                    </effect>
+                </ListView>
+            </VBox>
+        </HBox>
+
+        <!-- Status Bar -->
+        <HBox spacing="10" styleClass="status-bar">
+            <Label fx:id="statusLabel" styleClass="status-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="totalEventsLabel" styleClass="status-text"/>
+        </HBox>
+    </VBox>
+</StackPane> 

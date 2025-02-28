@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.pidev.controllers.EventController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Event Date:"/>
+        <DatePicker fx:id="eventDatePicker"/>
+    </HBox>
+
+    <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+        <VBox spacing="5">
+            <Label text="Available Events" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="eventListView" VBox.vgrow="ALWAYS"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="My Events" style="-fx-font-weight: bold;"/>
+            <ListView fx:id="myEventsListView" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </SplitPane>
+</VBox> 
