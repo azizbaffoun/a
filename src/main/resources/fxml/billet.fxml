@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.BilletController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10" styleClass="form-container">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Event:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="eventComboBox" promptText="Select Event" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Purchase Date:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateAchatPicker" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Price:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="prixField" promptText="Enter price" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Ticket Type:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="typeBilletField" promptText="Enter ticket type" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="statutComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Quantity:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <Spinner fx:id="quantiteSpinner" editable="true" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+        <HBox spacing="10" GridPane.columnSpan="2" GridPane.rowIndex="6">
+            <Button text="Add" onAction="#handleAdd" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <Button text="Update" onAction="#handleUpdate" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+            <Button text="Clear" onAction="#handleClear" style="-fx-background-color: #9E9E9E; -fx-text-fill: white;"/>
+        </HBox>
+    </GridPane>
+
+    <VBox fx:id="listContainer" VBox.vgrow="ALWAYS">
+        <Label text="Available Tickets" styleClass="list-header" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <ListView fx:id="billetListView" VBox.vgrow="ALWAYS" style="-fx-border-color: #ddd; -fx-border-width: 1px;"/>
+    </VBox>
+</VBox> 

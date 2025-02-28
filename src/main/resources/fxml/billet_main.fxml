@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="tn.esprit.jappa.controllers.BilletMainController">
+    
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="Ticket Management">
+            <fx:include source="billet.fxml"/>
+        </Tab>
+        <Tab text="Reserve Tickets">
+            <fx:include source="billet_reservation.fxml"/>
+        </Tab>
+    </TabPane>
+    
+</VBox> 

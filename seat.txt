@@ -1,0 +1,220 @@
+*** TERRAIN SEAT BOOKING SYSTEM - IMPLEMENTATION PROMPT ***
+
+OBJECTIVE:
+Add a cinema-style seat booking system to the existing terrain management project, allowing users to visually select seats from a grid layout representing the terrain.
+
+CURRENT DATABASE STRUCTURE:
+- terrain (courtID, type, localisation, capacite, statut)
+- reservationterrain (ID, userID, terrainID, dateReservation, heureReservation, statut)
+- reservation (ID, utilisateurID, dateReservation, statut, type)
+
+REQUIRED NEW TABLES:
+1. terrain_siege:
+```sql
+CREATE TABLE `terrain_siege` (
+    `siegeID` int PRIMARY KEY AUTO_INCREMENT,
+    `terrainID` int,
+    `rangee` varchar(5),
+    `numero` varchar(10),
+    `statut` enum('Disponible','Réservé','Maintenance') DEFAULT 'Disponible',
+    `prix` decimal(10,2),
+    FOREIGN KEY (`terrainID`) REFERENCES `terrain`(`courtID`)
+);
+```
+
+2. reservation_siege:
+```sql
+CREATE TABLE `reservation_siege` (
+    `reservationID` int,
+    `siegeID` int,
+    `prix_unitaire` decimal(10,2),
+    PRIMARY KEY (`reservationID`, `siegeID`),
+    FOREIGN KEY (`reservationID`) REFERENCES `reservationterrain`(`ID`),
+    FOREIGN KEY (`siegeID`) REFERENCES `terrain_siege`(`siegeID`)
+);
+```
+
+JAVA CLASSES TO CREATE:
+
+1. Model Class - TerrainSiege.java:
+```java
+public class TerrainSiege {
+    private IntegerProperty siegeID;
+    private IntegerProperty terrainID;
+    private StringProperty rangee;
+    private StringProperty numero;
+    private StringProperty statut;
+    private DoubleProperty prix;
+    private BooleanProperty isSelected;
+    
+    // Constructor, getters, setters, and property methods
+}
+```
+
+2. Controller Class - TerrainSeatingController.java:
+```java
+public class TerrainSeatingController {
+    @FXML private GridPane seatingGrid;
+    @FXML private Label totalLabel;
+    @FXML private Button confirmButton;
+    
+    private ObservableList<TerrainSiege> selectedSeats;
+    private TerrainSiegeService siegeService;
+    
+    // Initialize and event handling methods
+}
+```
+
+3. Service Class - TerrainSiegeService.java:
+```java
+public class TerrainSiegeService {
+    // Database operations for seats
+    public List<TerrainSiege> getAvailableSeats(int terrainId, LocalDate date, LocalTime time);
+    public boolean reserveSeats(int reservationId, List<TerrainSiege> seats);
+    public void updateSeatStatus(int siegeId, String status);
+}
+```
+
+FXML LAYOUT STRUCTURE:
+
+terrain_seating.fxml:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="your.package.TerrainSeatingController"
+      styleClass="seating-container">
+    
+    <!-- Terrain Information -->
+    <HBox styleClass="info-container">
+        <Label fx:id="terrainName"/>
+        <Label fx:id="dateTime"/>
+    </HBox>
+    
+    <!-- Seating Grid -->
+    <ScrollPane>
+        <GridPane fx:id="seatingGrid" styleClass="seating-grid"/>
+    </ScrollPane>
+    
+    <!-- Legend -->
+    <HBox styleClass="legend">
+        <Label text="Available"/>
+        <Label text="Selected"/>
+        <Label text="Reserved"/>
+    </HBox>
+    
+    <!-- Booking Summary -->
+    <VBox styleClass="summary-container">
+        <Label fx:id="selectedSeatsLabel"/>
+        <Label fx:id="totalLabel"/>
+        <Button fx:id="confirmButton" text="Confirm Booking"/>
+    </VBox>
+</VBox>
+```
+
+CSS STYLING:
+
+styles.css:
+```css
+.seat-button {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.seat-available {
+    -fx-background-color: #4CAF50;
+}
+
+.seat-selected {
+    -fx-background-color: #2196F3;
+}
+
+.seat-reserved {
+    -fx-background-color: #f44336;
+}
+
+.seating-grid {
+    -fx-hgap: 5;
+    -fx-vgap: 5;
+    -fx-padding: 20;
+}
+
+.summary-container {
+    -fx-padding: 10;
+    -fx-spacing: 10;
+    -fx-background-color: #f5f5f5;
+}
+```
+
+IMPLEMENTATION STEPS:
+
+1. Database Setup:
+   - Execute the SQL scripts to create new tables
+   - Add initial seat data for existing terrains
+
+2. Model Implementation:
+   - Create TerrainSiege class with JavaFX properties
+   - Implement necessary property bindings
+
+3. Service Layer:
+   - Implement database operations in TerrainSiegeService
+   - Add transaction management for seat reservations
+   - Handle concurrent booking scenarios
+
+4. UI Implementation:
+   - Create FXML layout for seating view
+   - Implement seat grid generation
+   - Add seat selection handling
+   - Implement booking confirmation
+
+5. Integration:
+   - Connect to existing reservation system
+   - Add navigation to seating view
+   - Update existing booking workflows
+
+FEATURES TO IMPLEMENT:
+
+1. Interactive Seat Selection:
+   - Click to select/deselect seats
+   - Visual feedback for selection
+   - Real-time price updates
+
+2. Booking Management:
+   - Seat availability checking
+   - Concurrent booking prevention
+   - Reservation confirmation
+
+3. Visual Elements:
+   - Color-coded seat status
+   - Seat numbers and rows
+   - Terrain layout representation
+
+4. Validation:
+   - Maximum seat selection limit
+   - Adjacent seat selection rules
+   - Booking timeout handling
+
+ADDITIONAL CONSIDERATIONS:
+
+1. Performance:
+   - Efficient seat grid rendering
+   - Optimized database queries
+   - Caching of seat data
+
+2. User Experience:
+   - Clear visual feedback
+   - Intuitive seat selection
+   - Responsive layout
+
+3. Error Handling:
+   - Booking conflicts
+   - Network issues
+   - Invalid selections
+
+4. Security:
+   - Validation of seat availability
+   - User authentication
+   - Booking permissions
+
+*** END OF PROMPT ***

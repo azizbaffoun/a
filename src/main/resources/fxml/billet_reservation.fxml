@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.jappa.controllers.BilletReservationController">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Event:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="eventComboBox" promptText="Select Event" 
+                  GridPane.columnIndex="1" GridPane.rowIndex="0" 
+                  GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Ticket Type:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ComboBox fx:id="ticketComboBox" promptText="Select Ticket" 
+                  GridPane.columnIndex="1" GridPane.rowIndex="1" 
+                  GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Purchase Date:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <DatePicker fx:id="datePicker" 
+                   GridPane.columnIndex="1" GridPane.rowIndex="2"
+                   GridPane.hgrow="ALWAYS" maxWidth="Infinity"/>
+
+        <Label text="Phone Number:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <HBox spacing="10" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <ComboBox fx:id="countryCodeCombo" prefWidth="100" promptText="+216"/>
+            <TextField fx:id="phoneNumberField" promptText="Enter your phone number" HBox.hgrow="ALWAYS"/>
+        </HBox>
+
+        <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <Label fx:id="priceLabel" text="0.00€"
+               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <Label text="Quantity:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <Spinner fx:id="quantitySpinner" min="1" max="10" initialValue="1"
+                 GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+        <Label text="Available:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <Label fx:id="availableQuantityLabel" text="Available: 0" 
+               GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+        <Label text="Total:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+        <Label fx:id="totalPriceLabel" text="Total: 0.00€" 
+               style="-fx-font-weight: bold;" 
+               GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+        <Button fx:id="reserveButton" text="Reserve" onAction="#handleReservation"
+                GridPane.columnIndex="1" GridPane.rowIndex="8" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                maxWidth="Infinity"/>
+    </GridPane>
+
+    <VBox VBox.vgrow="ALWAYS" spacing="5">
+        <Label text="Your Reservations" style="-fx-font-weight: bold;"/>
+        <ListView fx:id="reservationsListView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</VBox> 

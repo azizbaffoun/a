@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.ReservationBilletController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10" styleClass="form-container">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="User:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="userComboBox" promptText="Select user" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Reservation Date:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dateReservationPicker" promptText="Select date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="statutComboBox" promptText="Select status" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Number of Tickets:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="nombreBilletField" promptText="Enter number of tickets" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Ticket:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="billetComboBox" promptText="Select ticket" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Phone Number:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneNumberField" promptText="Enter phone number for verification" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER" styleClass="button-container">
+        <Button text="Add" onAction="#handleAdd" styleClass="button-add"/>
+        <Button text="Update" onAction="#handleUpdate" styleClass="button-update"/>
+        <Button text="Delete" onAction="#handleDelete" styleClass="button-delete"/>
+        <Button text="Clear" onAction="#handleClear" styleClass="button-clear"/>
+    </HBox>
+
+    <VBox fx:id="listContainer" VBox.vgrow="ALWAYS">
+        <Label fx:id="listHeader" styleClass="list-header"/>
+        <ListView fx:id="reservationListView" VBox.vgrow="ALWAYS"/>
+    </VBox>
+</VBox> 

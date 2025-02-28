@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="tn.esprit.jappa.controllers.TerrainSeatingController"
+      styleClass="seating-container"
+      spacing="10"
+      style="-fx-padding: 20;">
+    
+    <!-- Terrain Information -->
+    <HBox styleClass="info-container" spacing="20" alignment="CENTER">
+        <Label fx:id="terrainName" styleClass="terrain-name"/>
+        <Label fx:id="dateTime" styleClass="date-time"/>
+    </HBox>
+    
+    <!-- Legend -->
+    <HBox styleClass="legend" spacing="20" alignment="CENTER">
+        <padding>
+            <Insets top="10" bottom="10"/>
+        </padding>
+        <VBox alignment="CENTER" spacing="5">
+            <Rectangle width="20" height="20" styleClass="seat-available"/>
+            <Label text="Disponible"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5">
+            <Rectangle width="20" height="20" styleClass="seat-selected"/>
+            <Label text="Sélectionné"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5">
+            <Rectangle width="20" height="20" styleClass="seat-reserved"/>
+            <Label text="Réservé"/>
+        </VBox>
+    </HBox>
+    
+    <!-- Seating Grid -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
+        <GridPane fx:id="seatingGrid" styleClass="seating-grid" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+        </GridPane>
+    </ScrollPane>
+    
+    <!-- Booking Summary -->
+    <VBox styleClass="summary-container" spacing="10">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <Label fx:id="selectedSeatsLabel" styleClass="selected-seats"/>
+        <Label fx:id="totalLabel" styleClass="total-price"/>
+        <Button fx:id="confirmButton" text="Confirmer la réservation" 
+                styleClass="confirm-button" maxWidth="Infinity"
+                onAction="#handleConfirmation"/>
+    </VBox>
+</VBox> 

@@ -1,0 +1,151 @@
+TICKET RESERVATION SYSTEM GUIDANCE
+================================
+
+1. TICKET QUANTITY MANAGEMENT
+----------------------------
+
+a) Database Structure:
+- The 'billet' table already has a 'quantite' column to track available tickets
+- The 'reservation_billet' table tracks individual reservations with 'nombreBillet'
+
+b) Implementation Steps for Quantity Management:
+
+1. Update ReservationBilletService.add() method:
+   - Already implements transaction management
+   - Checks available quantity before reservation
+   - Updates ticket quantity after reservation
+   - Rolls back if any step fails
+
+2. Add Quantity Validation:
+   - Add validation in ReservationBilletController before making reservation
+   - Check if requested quantity <= available quantity
+   - Show appropriate error message if quantity exceeds available tickets
+
+3. Update UI to Show Available Quantity:
+   - Display available quantity in ticket selection ComboBox
+   - Update the display after each reservation
+   - Disable reservation if no tickets available
+
+2. FIX DELETE FUNCTIONALITY
+--------------------------
+
+Current Issues:
+- Delete operation doesn't update ticket quantities
+- Cascade delete not properly handling related records
+
+Steps to Fix Delete:
+
+1. Update ReservationService.delete():
+   - Implement transaction management
+   - Retrieve reservation details before deletion
+   - Update ticket quantities by adding back the reserved amount
+   - Delete the reservation
+   - Commit transaction or rollback on failure
+
+2. SQL Updates:
+   - Verify CASCADE constraints in reservation_billet table
+   - Ensure proper foreign key relationships
+
+3. Code Implementation:
+
+a) Update ReservationService.delete():
+```java
+public void delete(int id) throws SQLException {
+    Connection connection = DatabaseConnection.getInstance().getConnection();
+    connection.setAutoCommit(false);
+    
+    try {
+        // Get reservation details first
+        ReservationBillet reservationBillet = getReservationBilletByReservationId(id);
+        
+        if (reservationBillet != null) {
+            // Update ticket quantity
+            String updateQuery = "UPDATE billet SET quantite = quantite + ? WHERE ID = ?";
+            try (PreparedStatement updatePst = connection.prepareStatement(updateQuery)) {
+                updatePst.setInt(1, reservationBillet.getNombreBillet());
+                updatePst.setInt(2, reservationBillet.getBilletID());
+                updatePst.executeUpdate();
+            }
+            
+            // Delete reservation
+            String deleteQuery = "DELETE FROM reservation WHERE ID = ?";
+            try (PreparedStatement deletePst = connection.prepareStatement(deleteQuery)) {
+                deletePst.setInt(1, id);
+                deletePst.executeUpdate();
+            }
+        }
+        
+        connection.commit();
+    } catch (SQLException e) {
+        connection.rollback();
+        throw e;
+    } finally {
+        connection.setAutoCommit(true);
+    }
+}
+```
+
+b) Add Helper Method to ReservationService:
+```java
+private ReservationBillet getReservationBilletByReservationId(int reservationId) throws SQLException {
+    String query = "SELECT * FROM reservation_billet WHERE reservationID = ?";
+    try (PreparedStatement pst = connection.prepareStatement(query)) {
+        pst.setInt(1, reservationId);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+            ReservationBillet rb = new ReservationBillet();
+            rb.setReservationID(rs.getInt("reservationID"));
+            rb.setBilletID(rs.getInt("billetID"));
+            rb.setNombreBillet(rs.getInt("nombreBillet"));
+            return rb;
+        }
+    }
+    return null;
+}
+```
+
+4. TESTING CHECKLIST
+-------------------
+
+1. Quantity Management:
+   - Create new ticket with initial quantity
+   - Make reservation with valid quantity
+   - Verify remaining quantity is correct
+   - Try to reserve more than available
+   - Verify error message appears
+
+2. Delete Functionality:
+   - Create reservation
+   - Verify quantity decreased
+   - Delete reservation
+   - Verify quantity restored
+   - Check no orphaned records in reservation_billet
+
+5. ERROR HANDLING
+----------------
+
+1. Add appropriate error messages:
+   - "Insufficient tickets available"
+   - "Cannot reserve more than available quantity"
+   - "Error updating ticket quantity"
+   - "Error deleting reservation"
+
+2. Implement proper exception handling:
+   - Catch and handle SQLExceptions
+   - Show user-friendly error messages
+   - Log technical errors for debugging
+
+6. UI IMPROVEMENTS
+----------------
+
+1. Add quantity indicators:
+   - Show available quantity in ticket selection
+   - Update quantity display after operations
+   - Disable reservation button if no tickets available
+
+2. Add confirmation dialogs:
+   - Confirm deletion of reservation
+   - Show success messages after operations
+   - Display clear error messages on failure
+
+Remember to test thoroughly after implementing these changes to ensure both quantity management and delete functionality work as expected.

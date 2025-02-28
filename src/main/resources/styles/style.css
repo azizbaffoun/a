@@ -1,0 +1,75 @@
+.main-container {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20px;
+}
+
+.form-container {
+    -fx-background-color: white;
+    -fx-padding: 15px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.button-container {
+    -fx-padding: 10px 0;
+}
+
+.button {
+    -fx-padding: 8px 15px;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+}
+
+.button-add {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.button-update {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+.button-delete {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+.button-clear {
+    -fx-background-color: #9E9E9E;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+}
+
+.list-view {
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.list-cell {
+    -fx-padding: 8px;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #2196F3;
+}
+
+.text-field, .date-picker, .combo-box {
+    -fx-pref-height: 35px;
+    -fx-background-radius: 5px;
+}
+
+.label {
+    -fx-font-weight: bold;
+}
+
+.list-header {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
+} 
