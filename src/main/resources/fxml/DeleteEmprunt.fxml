@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.DeleteEmpruntController">
+    <children>
+        <Label text="Delete Emprunt" layoutX="14.0" layoutY="14.0" />
+        <Label text="Are you sure you want to delete this Emprunt?" layoutX="14.0" layoutY="50.0" />
+        <Button text="Delete" layoutX="14.0" layoutY="100.0" onAction="#handleDelete" />
+        <Button text="Cancel" layoutX="100.0" layoutY="100.0" onAction="#handleCancel" />
+    </children>
+</AnchorPane> 

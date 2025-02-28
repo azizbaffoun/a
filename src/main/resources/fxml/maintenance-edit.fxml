@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.MaintenanceEditController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Edit Maintenance" styleClass="page-title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- List View Section -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="300">
+            <Label text="Maintenance List" styleClass="section-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Label fx:id="listHeader" styleClass="list-header"/>
+            <ListView fx:id="maintenanceListView" VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <!-- Edit Form Section -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="Edit Details" styleClass="section-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            
+            <GridPane hgap="15" vgap="15" styleClass="form-container">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Material:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="materielComboBox" promptText="Select material" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Maintenance Date:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="dateMaintenancePicker" promptText="Select maintenance date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextArea fx:id="descriptionField" promptText="Enter maintenance description" prefRowCount="3" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Cost:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="coutField" promptText="Enter maintenance cost" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="statutMaintenanceComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+                <padding>
+                    <Insets top="20" right="0" bottom="10" left="0"/>
+                </padding>
+                <Button text="Update" onAction="#handleUpdate" styleClass="button-primary"/>
+                <Button text="Clear" onAction="#handleClear" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox> 

@@ -113,9 +113,9 @@ public class MaterielController {
         buttonBox.setAlignment(Pos.CENTER);
 
         Button[] buttons = {
-            new Button("Add"),
-            new Button("Update"),
-            new Button("Delete"),
+            new Button("Add New Material"),
+            new Button("Edit Material"),
+            new Button("Delete Material"),
             new Button("Clear")
         };
 
@@ -217,6 +217,10 @@ public class MaterielController {
             return;
         }
 
+        updateMateriel(selected);
+    }
+
+    private void updateMateriel(Materiel selected) {
         try {
             selected.setType(typeField.getText());
             selected.setTypeSport(typeSportField.getText());
@@ -243,6 +247,10 @@ public class MaterielController {
             return;
         }
 
+        deleteMateriel(selected);
+    }
+
+    private void deleteMateriel(Materiel selected) {
         try {
             service.delete(selected.getId());
             refreshList();

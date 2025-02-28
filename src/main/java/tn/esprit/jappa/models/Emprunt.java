@@ -1,17 +1,19 @@
 package tn.esprit.jappa.models;
 
+import java.time.LocalDate;
+
 public class Emprunt {
     private int empruntID;
     private int userID;
     private int materielID;
-    private String dateEmprunt;
-    private String dateRetour;
-    private String statutEmprunt;
+    private LocalDate dateEmprunt;
+    private LocalDate dateRetour;
+    private EmpruntStatus statutEmprunt;
 
     // Constructors
     public Emprunt() {}
 
-    public Emprunt(int empruntID, int userID, int materielID, String dateEmprunt, String dateRetour, String statutEmprunt) {
+    public Emprunt(int empruntID, int userID, int materielID, LocalDate dateEmprunt, LocalDate dateRetour, EmpruntStatus statutEmprunt) {
         this.empruntID = empruntID;
         this.userID = userID;
         this.materielID = materielID;
@@ -45,38 +47,33 @@ public class Emprunt {
         this.materielID = materielID;
     }
 
-    public String getDateEmprunt() {
+    public LocalDate getDateEmprunt() {
         return dateEmprunt;
     }
 
-    public void setDateEmprunt(String dateEmprunt) {
+    public void setDateEmprunt(LocalDate dateEmprunt) {
         this.dateEmprunt = dateEmprunt;
     }
 
-    public String getDateRetour() {
+    public LocalDate getDateRetour() {
         return dateRetour;
     }
 
-    public void setDateRetour(String dateRetour) {
+    public void setDateRetour(LocalDate dateRetour) {
         this.dateRetour = dateRetour;
     }
 
-    public String getStatutEmprunt() {
+    public EmpruntStatus getStatutEmprunt() {
         return statutEmprunt;
     }
 
-    public void setStatutEmprunt(String statutEmprunt) {
+    public void setStatutEmprunt(EmpruntStatus statutEmprunt) {
         this.statutEmprunt = statutEmprunt;
     }
 
     @Override
     public String toString() {
-        return String.format("%-8d %-20s %-20s %-15s %-15d %-15d",
-                empruntID,
-                dateEmprunt,
-                dateRetour,
-                statutEmprunt,
-                userID,
-                materielID);
+        return String.format("Loan #%d: Material %d borrowed by User %d from %s to %s (%s)",
+            empruntID, materielID, userID, dateEmprunt, dateRetour, statutEmprunt);
     }
 } 

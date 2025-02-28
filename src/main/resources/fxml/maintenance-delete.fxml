@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.jappa.controllers.MaintenanceDeleteController"
+      spacing="10" alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label fx:id="listHeader" text="Delete Maintenance Records" 
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="maintenanceTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="materielColumn" text="Material" prefWidth="150"/>
+            <TableColumn fx:id="dateMaintenanceColumn" text="Maintenance Date" prefWidth="150"/>
+            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
+            <TableColumn fx:id="coutColumn" text="Cost" prefWidth="100"/>
+            <TableColumn fx:id="statutColumn" text="Status" prefWidth="100"/>
+            <TableColumn fx:id="actionColumn" text="Action" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
+</VBox> 

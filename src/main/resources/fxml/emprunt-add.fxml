@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EmpruntAddController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Add New Loan" styleClass="page-title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="15" vgap="15" styleClass="form-container">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="User:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="userIDComboBox" promptText="Select user" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Material:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="materielComboBox" promptText="Select material" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Loan Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+        <DatePicker fx:id="dateEmpruntPicker" promptText="Select loan date" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Return Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+        <DatePicker fx:id="dateRetourPicker" promptText="Select return date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="statutEmpruntComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+        <padding>
+            <Insets top="20" right="0" bottom="10" left="0"/>
+        </padding>
+        <Button text="Add Loan" onAction="#handleAdd" styleClass="button-primary"/>
+        <Button text="Clear Form" onAction="#handleClear" styleClass="button-secondary"/>
+    </HBox>
+</VBox> 

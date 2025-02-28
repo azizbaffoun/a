@@ -3,6 +3,7 @@ package tn.esprit.jappa.controllers;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import tn.esprit.jappa.models.Emprunt;
 import tn.esprit.jappa.models.Materiel;
 import tn.esprit.jappa.models.EmpruntStatus;
@@ -68,6 +69,24 @@ public class EmpruntController {
                 }
             }
         });
+
+        // Create buttons with consistent width
+        HBox buttonBox = new HBox(10);
+
+        Button[] buttons = {
+            new Button("Add New Loan"),
+            new Button("Edit Loan"),
+            new Button("Delete Loan"),
+            new Button("Clear")
+        };
+
+        // Add event handlers
+        buttons[0].setOnAction(e -> handleAdd());
+        buttons[1].setOnAction(e -> handleUpdate());
+        buttons[2].setOnAction(e -> handleDelete());
+        buttons[3].setOnAction(e -> handleClear());
+
+        buttonBox.getChildren().addAll(buttons);
     }
 
     private void refreshUserList() {
@@ -81,8 +100,7 @@ public class EmpruntController {
                     if (empty || item == null) {
                         setText(null);
                     } else {
-                        setText(String.format("%d - %s %s", 
-                            item.getId(), item.getPrenom(), item.getNom()));
+                        setText(item.getNom() + " " + item.getPrenom() + " (ID: " + item.getId() + ")");
                     }
                 }
             });
@@ -103,13 +121,13 @@ public class EmpruntController {
                     if (empty || item == null) {
                         setText(null);
                     } else {
-                        setText(item.getType() + " - " + item.getTypeSport() + " (ID: " + item.getId() + ")");
+                        setText(item.toString());
                     }
                 }
             });
             materielComboBox.setButtonCell(materielComboBox.getCellFactory().call(null));
         } catch (SQLException ex) {
-            showAlert("Error", "Error loading materiel list: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error loading material list: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -148,16 +166,16 @@ public class EmpruntController {
             Emprunt emprunt = new Emprunt();
             emprunt.setUserID(userIDComboBox.getValue().getId());
             emprunt.setMaterielID(materielComboBox.getValue().getId());
-            emprunt.setDateEmprunt(dateEmpruntPicker.getValue().format(DATE_FORMATTER));
-            emprunt.setDateRetour(dateRetourPicker.getValue().format(DATE_FORMATTER));
-            emprunt.setStatutEmprunt(statutEmpruntComboBox.getValue().getDisplayName());
+            emprunt.setDateEmprunt(dateEmpruntPicker.getValue());
+            emprunt.setDateRetour(dateRetourPicker.getValue());
+            emprunt.setStatutEmprunt(statutEmpruntComboBox.getValue());
 
             service.add(emprunt);
             refreshList();
             clearFields();
-            showAlert("Success", "Emprunt added successfully!", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Loan added successfully!", Alert.AlertType.INFORMATION);
         } catch (SQLException ex) {
-            showAlert("Error", "Error adding emprunt: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error adding loan: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -165,7 +183,7 @@ public class EmpruntController {
     private void handleUpdate() {
         Emprunt selected = empruntListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("Error", "Please select an emprunt to update!", Alert.AlertType.ERROR);
+            showAlert("Error", "Please select a loan to update!", Alert.AlertType.ERROR);
             return;
         }
 
@@ -173,18 +191,22 @@ public class EmpruntController {
             return;
         }
 
+        updateEmprunt(selected);
+    }
+
+    private void updateEmprunt(Emprunt selected) {
         try {
             selected.setUserID(userIDComboBox.getValue().getId());
             selected.setMaterielID(materielComboBox.getValue().getId());
-            selected.setDateEmprunt(dateEmpruntPicker.getValue().format(DATE_FORMATTER));
-            selected.setDateRetour(dateRetourPicker.getValue().format(DATE_FORMATTER));
-            selected.setStatutEmprunt(statutEmpruntComboBox.getValue().getDisplayName());
+            selected.setDateEmprunt(dateEmpruntPicker.getValue());
+            selected.setDateRetour(dateRetourPicker.getValue());
+            selected.setStatutEmprunt(statutEmpruntComboBox.getValue());
 
             service.update(selected);
             refreshList();
-            showAlert("Success", "Emprunt updated successfully!", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Loan updated successfully!", Alert.AlertType.INFORMATION);
         } catch (SQLException ex) {
-            showAlert("Error", "Error updating emprunt: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error updating loan: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -192,17 +214,21 @@ public class EmpruntController {
     private void handleDelete() {
         Emprunt selected = empruntListView.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("Error", "Please select an emprunt to delete!", Alert.AlertType.ERROR);
+            showAlert("Error", "Please select a loan to delete!", Alert.AlertType.ERROR);
             return;
         }
 
+        deleteEmprunt(selected);
+    }
+
+    private void deleteEmprunt(Emprunt selected) {
         try {
             service.delete(selected.getEmpruntID());
             refreshList();
             clearFields();
-            showAlert("Success", "Emprunt deleted successfully!", Alert.AlertType.INFORMATION);
+            showAlert("Success", "Loan deleted successfully!", Alert.AlertType.INFORMATION);
         } catch (SQLException ex) {
-            showAlert("Error", "Error deleting emprunt: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error deleting loan: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -215,7 +241,7 @@ public class EmpruntController {
         try {
             empruntListView.setItems(FXCollections.observableArrayList(service.getAll()));
         } catch (SQLException ex) {
-            showAlert("Error", "Error loading emprunt list: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error loading loan list: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -229,12 +255,12 @@ public class EmpruntController {
             Materiel materiel = materielService.getById(emprunt.getMaterielID());
             materielComboBox.setValue(materiel);
         } catch (SQLException ex) {
-            showAlert("Error", "Error loading materiel: " + ex.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Error loading material: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
         
-        dateEmpruntPicker.setValue(LocalDate.parse(emprunt.getDateEmprunt(), DATE_FORMATTER));
-        dateRetourPicker.setValue(LocalDate.parse(emprunt.getDateRetour(), DATE_FORMATTER));
-        statutEmpruntComboBox.setValue(EmpruntStatus.valueOf(emprunt.getStatutEmprunt().toUpperCase().replace(" ", "_")));
+        dateEmpruntPicker.setValue(emprunt.getDateEmprunt());
+        dateRetourPicker.setValue(emprunt.getDateRetour());
+        statutEmpruntComboBox.setValue(emprunt.getStatutEmprunt());
     }
 
     private void clearFields() {
@@ -253,7 +279,7 @@ public class EmpruntController {
             errorMessage.append("User selection is required.\n");
         }
         if (materielComboBox.getValue() == null) {
-            errorMessage.append("Materiel selection is required.\n");
+            errorMessage.append("Material selection is required.\n");
         }
         if (dateEmpruntPicker.getValue() == null) {
             errorMessage.append("Borrow date is required.\n");

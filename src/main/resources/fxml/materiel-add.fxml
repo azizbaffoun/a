@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.MaterielAddController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Add New Material" styleClass="page-title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="15" vgap="15" styleClass="form-container">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="typeField" promptText="Enter material type" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Sport Type:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="typeSportField" promptText="Enter sport type" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Price:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="prixField" promptText="Enter price" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Reservation Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+        <DatePicker fx:id="dateReservationPicker" promptText="Select date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="statutComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Owner Type:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="ownerTypeComboBox" promptText="Select owner type" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+        <padding>
+            <Insets top="20" right="0" bottom="10" left="0"/>
+        </padding>
+        <Button text="Add Material" onAction="#handleAdd" styleClass="button-primary"/>
+        <Button text="Clear Form" onAction="#handleClear" styleClass="button-secondary"/>
+    </HBox>
+</VBox> 

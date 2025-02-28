@@ -1,7 +1,7 @@
 package tn.esprit.jappa.models;
 
 public enum MaintenanceStatus {
-    SCHEDULED("Scheduled"),
+    PENDING("Pending"),
     IN_PROGRESS("In Progress"),
     COMPLETED("Completed"),
     CANCELLED("Cancelled");

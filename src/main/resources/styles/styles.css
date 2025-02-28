@@ -1,0 +1,115 @@
+.main-container {
+    -fx-background-color: #f5f5f5;
+}
+
+.title-text {
+    -fx-fill: #2c3e50;
+}
+
+.section-title {
+    -fx-text-fill: #2c3e50;
+}
+
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 3);
+    -fx-padding: 20;
+}
+
+.form-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.menu-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+.menu-button:hover {
+    -fx-background-color: #2980b9;
+    -fx-cursor: hand;
+}
+
+.button-primary {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.button-primary:hover {
+    -fx-background-color: #27ae60;
+    -fx-cursor: hand;
+}
+
+.button-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.button-danger:hover {
+    -fx-background-color: #c0392b;
+    -fx-cursor: hand;
+}
+
+.button-secondary {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.button-secondary:hover {
+    -fx-background-color: #7f8c8d;
+    -fx-cursor: hand;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.list-view .list-cell {
+    -fx-padding: 10 15;
+    -fx-background-color: transparent;
+}
+
+.list-view .list-cell:filled:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.list-view .list-cell:filled:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.list-view .list-cell:filled:selected:hover {
+    -fx-background-color: #2980b9;
+}
+
+.text-field, .date-picker, .combo-box {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.text-field:focused, .date-picker:focused, .combo-box:focused {
+    -fx-border-color: #3498db;
+    -fx-background-color: white;
+}
+
+.list-header {
+    -fx-font-weight: bold;
+    -fx-padding: 5 0;
+    -fx-text-fill: #2c3e50;
+} 

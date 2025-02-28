@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox spacing="20" alignment="CENTER" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.MaintenanceMenuController">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Text text="Maintenance Management" styleClass="title-text" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+    
+    <VBox spacing="15" alignment="CENTER" maxWidth="400">
+        <Button text="Add New Maintenance" onAction="#handleAddMaintenance" maxWidth="Infinity" styleClass="menu-button">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
+        
+        <Button text="Edit Maintenance" onAction="#handleEditMaintenance" maxWidth="Infinity" styleClass="menu-button">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
+
+        <Button text="Delete Maintenance" onAction="#handleDeleteMaintenance" maxWidth="Infinity" styleClass="menu-button">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
+        
+        <Button text="Back to Main Menu" onAction="#handleBackToMain" maxWidth="Infinity" styleClass="menu-button-secondary">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
+    </VBox>
+</VBox> 

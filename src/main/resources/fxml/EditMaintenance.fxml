@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EditMaintenanceController">
+    <children>
+        <Label text="Edit Maintenance" layoutX="14.0" layoutY="14.0" />
+        <ComboBox fx:id="materielComboBox" layoutX="14.0" layoutY="50.0" />
+        <DatePicker fx:id="dateMaintenancePicker" layoutX="14.0" layoutY="100.0" />
+        <TextArea fx:id="descriptionField" layoutX="14.0" layoutY="150.0" />
+        <TextField fx:id="coutField" layoutX="14.0" layoutY="250.0" />
+        <ComboBox fx:id="statutMaintenanceComboBox" layoutX="14.0" layoutY="300.0" />
+        <Button text="Save" layoutX="14.0" layoutY="350.0" onAction="#handleSave" />
+        <Button text="Cancel" layoutX="100.0" layoutY="350.0" onAction="#handleCancel" />
+    </children>
+</AnchorPane> 

@@ -21,4 +21,13 @@ public enum EmpruntStatus {
     public String toString() {
         return displayName;
     }
+
+    public static EmpruntStatus fromDisplayName(String displayName) {
+        for (EmpruntStatus status : values()) {
+            if (status.getDisplayName().equalsIgnoreCase(displayName)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("No EmpruntStatus with display name: " + displayName);
+    }
 } 

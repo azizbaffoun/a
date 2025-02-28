@@ -1,21 +1,24 @@
 package tn.esprit.jappa.models;
 
+import java.time.LocalDate;
+
 public class Maintenance {
     private int maintenanceID;
     private int materielID;
-    private String dateMaintenance;
+    private LocalDate dateMaintenance;
     private String description;
-    private String statutMaintenance;
     private double cout;
+    private MaintenanceStatus statutMaintenance;
 
     // Constructors
     public Maintenance() {}
 
-    public Maintenance(int maintenanceID, int materielID, String dateMaintenance, String description, String statutMaintenance) {
+    public Maintenance(int maintenanceID, int materielID, LocalDate dateMaintenance, String description, double cout, MaintenanceStatus statutMaintenance) {
         this.maintenanceID = maintenanceID;
         this.materielID = materielID;
         this.dateMaintenance = dateMaintenance;
         this.description = description;
+        this.cout = cout;
         this.statutMaintenance = statutMaintenance;
     }
 
@@ -36,11 +39,11 @@ public class Maintenance {
         this.materielID = materielID;
     }
 
-    public String getDateMaintenance() {
+    public LocalDate getDateMaintenance() {
         return dateMaintenance;
     }
 
-    public void setDateMaintenance(String dateMaintenance) {
+    public void setDateMaintenance(LocalDate dateMaintenance) {
         this.dateMaintenance = dateMaintenance;
     }
 
@@ -52,14 +55,6 @@ public class Maintenance {
         this.description = description;
     }
 
-    public String getStatutMaintenance() {
-        return statutMaintenance;
-    }
-
-    public void setStatutMaintenance(String statutMaintenance) {
-        this.statutMaintenance = statutMaintenance;
-    }
-
     public double getCout() {
         return cout;
     }
@@ -68,14 +63,17 @@ public class Maintenance {
         this.cout = cout;
     }
 
+    public MaintenanceStatus getStatutMaintenance() {
+        return statutMaintenance;
+    }
+
+    public void setStatutMaintenance(MaintenanceStatus statutMaintenance) {
+        this.statutMaintenance = statutMaintenance;
+    }
+
     @Override
     public String toString() {
-        return String.format("%-8d %-20s %-20s %-15.2f %-15s %-15s",
-                maintenanceID,
-                dateMaintenance,
-                description.length() > 20 ? description.substring(0, 17) + "..." : description,
-                cout,
-                statutMaintenance,
-                materielID);
+        return String.format("Maintenance #%d for Material %d on %s (%s)", 
+            maintenanceID, materielID, dateMaintenance, statutMaintenance);
     }
 } 
