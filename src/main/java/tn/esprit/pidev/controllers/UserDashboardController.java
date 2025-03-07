@@ -61,10 +61,22 @@ public class UserDashboardController implements Initializable {
     private void loadDashboardData() {
         try {
             // Load events counts
-            var myEventsResponse = eventService.getMyEvents(currentUserId);
+            var myEvents = eventService.getMyEvents(currentUserId);
             var allEvents = eventService.getAllEvents();
-            myEventsCount.setText(String.valueOf(myEventsResponse.getData().size()));
+            
+            // Update the counts
+            myEventsCount.setText(String.valueOf(myEvents.size()));
             availableEventsCount.setText(String.valueOf(allEvents.size()));
+            
+            // If we're in the My Events view, refresh the list
+            if (myEventsListView != null && myEventsListView.getScene() != null) {
+                myEventsListView.setItems(FXCollections.observableArrayList(myEvents));
+            }
+            
+            // If we're in the Available Events view, refresh the list
+            if (eventListView != null && eventListView.getScene() != null) {
+                eventListView.setItems(FXCollections.observableArrayList(allEvents));
+            }
         } catch (Exception e) {
             showError("Error loading dashboard data: " + e.getMessage());
         }
@@ -388,13 +400,69 @@ public class UserDashboardController implements Initializable {
         myEventsListView.getStyleClass().add("event-list");
         VBox.setVgrow(myEventsListView, Priority.ALWAYS);
         
-        // Setup the list view
-        setupListViews();
+        // Setup the list view with custom cell factory
+        myEventsListView.setCellFactory(lv -> new ListCell<Evenement>() {
+            private final VBox content = new VBox(5);
+            private final Label nameLabel = new Label();
+            private final Label dateLabel = new Label();
+            private final Label typeLabel = new Label();
+            private final Label statusLabel = new Label();
+            
+            {
+                content.setPadding(new Insets(10));
+                content.getStyleClass().add("event-cell");
+                
+                nameLabel.getStyleClass().add("event-name");
+                dateLabel.getStyleClass().add("event-date");
+                typeLabel.getStyleClass().add("event-type");
+                statusLabel.getStyleClass().add("event-status");
+                
+                content.getChildren().addAll(nameLabel, dateLabel, typeLabel, statusLabel);
+            }
+            
+            @Override
+            protected void updateItem(Evenement event, boolean empty) {
+                super.updateItem(event, empty);
+                
+                if (empty || event == null) {
+                    setGraphic(null);
+                } else {
+                    nameLabel.setText(event.getNom());
+                    dateLabel.setText(String.format("Date: %s - %s", 
+                        event.getDateDebut().toLocalDate(), 
+                        event.getDateFin().toLocalDate()));
+                    typeLabel.setText("Type: " + event.getType());
+                    statusLabel.setText("Status: " + event.getStatut());
+                    
+                    // Style past events differently
+                    if (event.getDateDebut().isBefore(LocalDateTime.now())) {
+                        nameLabel.setTextFill(Color.GRAY);
+                        statusLabel.setTextFill(Color.GRAY);
+                    } else {
+                        nameLabel.setTextFill(Color.BLACK);
+                        statusLabel.setTextFill(Color.GREEN);
+                    }
+                    
+                    setGraphic(content);
+                }
+            }
+        });
         
         // Load my events
-        loadDashboardData();
-        
-        container.getChildren().addAll(headerText, myEventsListView);
+        try {
+            var events = eventService.getMyEvents(currentUserId);
+            myEventsListView.setItems(FXCollections.observableArrayList(events));
+            
+            if (events.isEmpty()) {
+                Text noEventsText = new Text("You haven't joined any events yet");
+                noEventsText.getStyleClass().add("no-events-text");
+                container.getChildren().addAll(headerText, noEventsText);
+            } else {
+                container.getChildren().addAll(headerText, myEventsListView);
+            }
+        } catch (Exception e) {
+            showError("Error loading my events: " + e.getMessage());
+        }
         
         // Add fade-in animation
         FadeTransition fadeIn = new FadeTransition(Duration.millis(1000), container);
@@ -412,7 +480,7 @@ public class UserDashboardController implements Initializable {
             Parent profileView = loader.load();
             
             // Clear and set new content
-            contentArea.getChildren().clear();
+        contentArea.getChildren().clear();
             contentArea.getChildren().add(profileView);
             
             // Get the controller and pass user ID if needed

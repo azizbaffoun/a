@@ -3,6 +3,8 @@ package tn.esprit.pidev.services;
 import tn.esprit.pidev.interfaces.IVenueService;
 import tn.esprit.pidev.models.Venue;
 import tn.esprit.pidev.utils.DatabaseConnection;
+import tn.esprit.pidev.enums.TerrainType;
+import tn.esprit.pidev.enums.TerrainStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,10 +22,10 @@ public class VenueService implements IVenueService {
     public boolean addVenue(Venue venue) {
         String query = "INSERT INTO terrain (type, localisation, capacite, statut) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
-            pst.setString(1, venue.getType());
+            pst.setString(1, venue.getType().getValue());
             pst.setString(2, venue.getLocalisation());
             pst.setInt(3, venue.getCapacite());
-            pst.setString(4, venue.getStatut());
+            pst.setString(4, venue.getStatut().getValue());
             
             return pst.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -36,10 +38,10 @@ public class VenueService implements IVenueService {
     public boolean updateVenue(Venue venue) {
         String query = "UPDATE terrain SET type=?, localisation=?, capacite=?, statut=? WHERE courtID=?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
-            pst.setString(1, venue.getType());
+            pst.setString(1, venue.getType().getValue());
             pst.setString(2, venue.getLocalisation());
             pst.setInt(3, venue.getCapacite());
-            pst.setString(4, venue.getStatut());
+            pst.setString(4, venue.getStatut().getValue());
             pst.setInt(5, venue.getCourtID());
             
             return pst.executeUpdate() > 0;
@@ -149,10 +151,28 @@ public class VenueService implements IVenueService {
     private Venue mapResultSetToVenue(ResultSet rs) throws SQLException {
         Venue venue = new Venue();
         venue.setCourtID(rs.getInt("courtID"));
-        venue.setType(rs.getString("type"));
+        
+        // Handle type conversion safely
+        String dbType = rs.getString("type");
+        try {
+            venue.setType(TerrainType.fromString(dbType));
+        } catch (IllegalArgumentException e) {
+            // Default to TERRAIN if conversion fails
+            venue.setType(TerrainType.TERRAIN);
+        }
+        
         venue.setLocalisation(rs.getString("localisation"));
         venue.setCapacite(rs.getInt("capacite"));
-        venue.setStatut(rs.getString("statut"));
+        
+        // Handle status conversion safely
+        String dbStatus = rs.getString("statut");
+        try {
+            venue.setStatut(TerrainStatus.fromString(dbStatus));
+        } catch (IllegalArgumentException e) {
+            // Default to DISPONIBLE if conversion fails
+            venue.setStatut(TerrainStatus.DISPONIBLE);
+        }
+        
         return venue;
     }
 } 

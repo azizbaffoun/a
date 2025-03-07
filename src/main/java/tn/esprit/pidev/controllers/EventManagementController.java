@@ -184,10 +184,19 @@ public class EventManagementController implements Initializable {
         ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
 
+        // Enable/disable add button depending on whether all data was entered
+        Node addButtonNode = dialog.getDialogPane().lookupButton(addButton);
+        addButtonNode.setDisable(false);
+
         // Convert result
         dialog.setResultConverter(buttonType -> {
             if (buttonType == addButton) {
-                return getEventFromDialog(grid);
+                Evenement event = getEventFromDialog(grid);
+                if (event == null) {
+                    // Keep dialog open if validation fails
+                    return null;
+                }
+                return event;
             }
             return null;
         });
@@ -317,110 +326,120 @@ public class EventManagementController implements Initializable {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
+        // Name field
         TextField nameField = new TextField();
-        nameField.setPromptText("Event Name");
-        TextArea detailsArea = new TextArea();
-        detailsArea.setPromptText("Event Details");
-        TextField typeField = new TextField();
-        typeField.setPromptText("Event Type");
-        TextField maxParticipantsField = new TextField();
-        maxParticipantsField.setPromptText("Max Participants");
-        
-        // Create DatePickers with date validation
+        nameField.setPromptText("Event name");
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+
+        // Description field
+        TextArea descriptionArea = new TextArea();
+        descriptionArea.setPromptText("Event description");
+        descriptionArea.setPrefRowCount(3);
+        grid.add(new Label("Description:"), 0, 1);
+        grid.add(descriptionArea, 1, 1);
+
+        // Type field (ComboBox)
+        ComboBox<String> typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("TERRAIN", "PADDEL");
+        typeComboBox.setPromptText("Select type");
+        grid.add(new Label("Type:"), 0, 2);
+        grid.add(typeComboBox, 1, 2);
+
+        // Start date field
         DatePicker startDatePicker = new DatePicker();
-        startDatePicker.setPromptText("Start Date");
-        DatePicker endDatePicker = new DatePicker();
-        endDatePicker.setPromptText("End Date");
-        
-        // Set minimum date to today for both date pickers
+        startDatePicker.setPromptText("Start date");
         startDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                LocalDate today = LocalDate.now();
-                setDisable(empty || date.compareTo(today) < 0);
+                setDisabled(empty || date.isBefore(LocalDate.now()));
             }
         });
-        
-        // End date can't be before start date
+        grid.add(new Label("Start Date:"), 0, 3);
+        grid.add(startDatePicker, 1, 3);
+
+        // End date field
+        DatePicker endDatePicker = new DatePicker();
+        endDatePicker.setPromptText("End date");
         endDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                LocalDate today = LocalDate.now();
-                setDisable(empty || date.compareTo(today) < 0);
+                setDisabled(empty || date.isBefore(startDatePicker.getValue()));
             }
         });
-        
-        // Add listeners for validation
-        startDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && endDatePicker.getValue() != null && 
-                endDatePicker.getValue().isBefore(newVal)) {
-                endDatePicker.setValue(newVal);
-            }
-        });
-        
-        // Only allow numbers in max participants field
-        maxParticipantsField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*")) {
-                maxParticipantsField.setText(newVal.replaceAll("[^\\d]", ""));
-            }
-        });
-
-        grid.add(new Label("Name:*"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Details:*"), 0, 1);
-        grid.add(detailsArea, 1, 1);
-        grid.add(new Label("Type:*"), 0, 2);
-        grid.add(typeField, 1, 2);
-        grid.add(new Label("Start Date:*"), 0, 3);
-        grid.add(startDatePicker, 1, 3);
-        grid.add(new Label("End Date:*"), 0, 4);
+        grid.add(new Label("End Date:"), 0, 4);
         grid.add(endDatePicker, 1, 4);
-        grid.add(new Label("Max Participants:*"), 0, 5);
+
+        // Max participants field
+        TextField maxParticipantsField = new TextField();
+        maxParticipantsField.setPromptText("Maximum participants");
+        grid.add(new Label("Max Participants:"), 0, 5);
         grid.add(maxParticipantsField, 1, 5);
 
         return grid;
     }
 
     private Evenement getEventFromDialog(GridPane grid) {
-        TextField nameField = (TextField) getNodeFromGridPane(grid, 1, 0);
-        TextArea detailsArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
-        TextField typeField = (TextField) getNodeFromGridPane(grid, 1, 2);
-        DatePicker startDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 3);
-        DatePicker endDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 4);
-        TextField maxParticipantsField = (TextField) getNodeFromGridPane(grid, 1, 5);
-
-        // Validate required fields
-        StringBuilder errors = new StringBuilder();
-        if (nameField.getText().trim().isEmpty()) errors.append("Name is required\n");
-        if (detailsArea.getText().trim().isEmpty()) errors.append("Details are required\n");
-        if (typeField.getText().trim().isEmpty()) errors.append("Type is required\n");
-        if (startDatePicker.getValue() == null) errors.append("Start date is required\n");
-        if (endDatePicker.getValue() == null) errors.append("End date is required\n");
-        if (maxParticipantsField.getText().trim().isEmpty()) errors.append("Max participants is required\n");
-
-        if (errors.length() > 0) {
-            showError(errors.toString());
+        try {
+            TextField nameField = (TextField) getNodeFromGridPane(grid, 1, 0);
+            TextArea descriptionArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
+            ComboBox<String> typeComboBox = (ComboBox<String>) getNodeFromGridPane(grid, 1, 2);
+            DatePicker startDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 3);
+            DatePicker endDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 4);
+            TextField maxParticipantsField = (TextField) getNodeFromGridPane(grid, 1, 5);
+            
+            // Validate required fields
+            StringBuilder errors = new StringBuilder();
+            if (nameField.getText().trim().isEmpty()) errors.append("Name is required\n");
+            if (descriptionArea.getText().trim().isEmpty()) errors.append("Description is required\n");
+            if (typeComboBox.getValue() == null) errors.append("Type is required\n");
+            if (startDatePicker.getValue() == null) errors.append("Start date is required\n");
+            if (endDatePicker.getValue() == null) errors.append("End date is required\n");
+            if (maxParticipantsField.getText().trim().isEmpty()) errors.append("Max participants is required\n");
+            
+            if (errors.length() > 0) {
+                showError(errors.toString());
+                return null;
+            }
+            
+            // Validate dates
+            if (startDatePicker.getValue() != null && endDatePicker.getValue() != null) {
+                if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+                    showError("End date must be after start date");
+                    return null;
+                }
+            }
+            
+            // Validate max participants
+            int maxParticipants;
+            try {
+                maxParticipants = Integer.parseInt(maxParticipantsField.getText().trim());
+                if (maxParticipants <= 0) {
+                    showError("Max participants must be a positive number");
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                showError("Max participants must be a valid number");
+                return null;
+            }
+            
+            // Create event if validation passes
+            Evenement event = new Evenement();
+            event.setNom(nameField.getText().trim());
+            event.setDescription(descriptionArea.getText().trim());
+            event.setType(typeComboBox.getValue());
+            event.setDateDebut(startDatePicker.getValue().atStartOfDay());
+            event.setDateFin(endDatePicker.getValue().atStartOfDay());
+            event.setCapaciteMax(maxParticipants);
+            event.setStatut("En cours");
+            
+            return event;
+        } catch (Exception e) {
+            showError("Error creating event: " + e.getMessage());
             return null;
         }
-
-        // Validate dates
-        if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
-            showError("End date must be after start date");
-            return null;
-        }
-
-        // Create event if validation passes
-        Evenement event = new Evenement();
-        event.setNom(nameField.getText().trim());
-        event.setDescription(detailsArea.getText().trim());
-        event.setType(typeField.getText().trim());
-        event.setDateDebut(startDatePicker.getValue().atStartOfDay());
-        event.setDateFin(endDatePicker.getValue().atStartOfDay());
-        event.setCapaciteMax(Integer.parseInt(maxParticipantsField.getText().trim()));
-        
-        return event;
     }
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
@@ -434,15 +453,15 @@ public class EventManagementController implements Initializable {
 
     private void populateDialogWithEvent(GridPane grid, Evenement event) {
         TextField nameField = (TextField) getNodeFromGridPane(grid, 1, 0);
-        TextArea detailsArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
-        TextField typeField = (TextField) getNodeFromGridPane(grid, 1, 2);
+        TextArea descriptionArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
+        ComboBox<String> typeComboBox = (ComboBox<String>) getNodeFromGridPane(grid, 1, 2);
         DatePicker startDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 3);
         DatePicker endDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 4);
         TextField maxParticipantsField = (TextField) getNodeFromGridPane(grid, 1, 5);
-
+        
         nameField.setText(event.getNom());
-        detailsArea.setText(event.getDescription());
-        typeField.setText(event.getType());
+        descriptionArea.setText(event.getDescription());
+        typeComboBox.setValue(event.getType());
         startDatePicker.setValue(event.getDateDebut().toLocalDate());
         endDatePicker.setValue(event.getDateFin().toLocalDate());
         maxParticipantsField.setText(String.valueOf(event.getCapaciteMax()));

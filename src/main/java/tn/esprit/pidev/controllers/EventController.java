@@ -9,6 +9,8 @@ import javafx.util.Callback;
 import tn.esprit.pidev.models.Evenement;
 import tn.esprit.pidev.services.EventService;
 import tn.esprit.pidev.models.ApiResponse;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,13 +24,14 @@ public class EventController {
     @FXML
     private ListView<Evenement> myEventsListView;
     
-    private final EventService eventService = new EventService();
+    private EventService eventService;
     private int currentUserId; // This should be set when user logs in
 
     @FXML
     public void initialize() {
         setupDatePicker();
         setupEventListView();
+        eventService = new EventService();
         loadEvents();
         loadMyEvents();
     }
@@ -119,18 +122,13 @@ public class EventController {
     }
 
     private void loadEvents() {
-        List<Evenement> events = eventService.getAllEvents();
-        eventListView.getItems().clear();
-        eventListView.getItems().addAll(events);
+        var events = eventService.getAllEvents();
+        eventListView.setItems(FXCollections.observableArrayList(events));
     }
 
     private void loadMyEvents() {
-        ApiResponse<List<Evenement>> response = eventService.getMyEvents(currentUserId);
-        if (response.isSuccess()) {
-            myEventsListView.getItems().setAll(response.getData());
-        } else {
-            showAlert("Error", "Failed to load your events: " + response.getMessage(), Alert.AlertType.ERROR);
-        }
+        var events = eventService.getMyEvents(currentUserId);
+        eventListView.setItems(FXCollections.observableArrayList(events));
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {
@@ -144,6 +142,6 @@ public class EventController {
     // Method to set current user ID (call this when user logs in)
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
-        loadMyEvents(); // Reload events for the new user
+        loadEvents(); // Reload events for the new user
     }
 } 

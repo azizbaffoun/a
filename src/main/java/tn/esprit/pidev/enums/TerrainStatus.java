@@ -14,4 +14,13 @@ public enum TerrainStatus {
     public String getValue() {
         return value;
     }
+    
+    public static TerrainStatus fromString(String text) {
+        for (TerrainStatus status : TerrainStatus.values()) {
+            if (status.value.equalsIgnoreCase(text)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("No constant with text " + text + " found");
+    }
 } 

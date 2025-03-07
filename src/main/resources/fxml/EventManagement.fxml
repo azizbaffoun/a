@@ -1,85 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.effect.*?>
 <?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-<StackPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="tn.esprit.pidev.controllers.EventManagementController"
-           styleClass="main-container">
+<StackPane styleClass="main-container" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.pidev.controllers.EventManagementController">
 
     <stylesheets>
-        <URL value="@../styles/event-management.css"/>
+        <URL value="@../styles/event-management.css" />
     </stylesheets>
 
     <VBox spacing="20" styleClass="content-container">
         <!-- Header -->
-        <HBox styleClass="header-container" alignment="CENTER_LEFT" spacing="20">
-            <Text text="Event Management" styleClass="header-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="searchField" promptText="Search events..." 
-                      styleClass="search-field" prefWidth="300"/>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header-container">
+            <Text styleClass="header-text" text="Event Management" />
+            <Region HBox.hgrow="ALWAYS" />
+            <TextField fx:id="searchField" prefWidth="300" promptText="Search events..." styleClass="search-field" />
         </HBox>
 
         <!-- Main Content Area -->
         <HBox spacing="20" VBox.vgrow="ALWAYS">
             <!-- Left Panel - Event List -->
-            <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="panel">
+            <VBox spacing="10" styleClass="panel" HBox.hgrow="ALWAYS">
                 <HBox spacing="10" styleClass="action-buttons">
-                    <Button text="Add Event" onAction="#showAddEventDialog"
-                            styleClass="action-button, add-button"/>
-                    <Button text="Edit Event" onAction="#showEditEventDialog"
-                            styleClass="action-button, edit-button"/>
-                    <Button text="Delete Event" onAction="#deleteEvent"
-                            styleClass="action-button, delete-button"/>
+                    <Button onAction="#showAddEventDialog" styleClass="action-button, add-button" text="Add Event" />
+                    <Button onAction="#showEditEventDialog" styleClass="action-button, edit-button" text="Edit Event" />
+                    <Button onAction="#deleteEvent" styleClass="action-button, delete-button" text="Delete Event" />
                 </HBox>
 
-                <TableView fx:id="eventTable" VBox.vgrow="ALWAYS" styleClass="event-table">
+                <TableView fx:id="eventTable" styleClass="event-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
-                        <TableColumn fx:id="detailsColumn" text="Description" prefWidth="200"/>
-                        <TableColumn fx:id="startDateColumn" text="Start Date" prefWidth="100"/>
-                        <TableColumn fx:id="endDateColumn" text="End Date" prefWidth="100"/>
-                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="100"/>
-                        <TableColumn fx:id="maxParticipantsColumn" text="Max Participants" prefWidth="120"/>
+                        <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+                        <TableColumn fx:id="nameColumn" prefWidth="150" text="Name" />
+                        <TableColumn fx:id="detailsColumn" prefWidth="200" text="Description" />
+                        <TableColumn fx:id="startDateColumn" prefWidth="100" text="Start Date" />
+                        <TableColumn fx:id="endDateColumn" prefWidth="100" text="End Date" />
+                        <TableColumn fx:id="typeColumn" prefWidth="100" text="Type" />
+                        <TableColumn fx:id="maxParticipantsColumn" prefWidth="120" text="Max Participants" />
                     </columns>
                     <effect>
-                        <DropShadow color="#00000022" radius="10" spread="0.1"/>
+                        <DropShadow color="#00000022" radius="10" spread="0.1" />
                     </effect>
                 </TableView>
-            </VBox>
-
-            <!-- Right Panel - Venue Management -->
-            <VBox spacing="10" styleClass="panel" prefWidth="300">
-                <Text text="Venue Management" styleClass="section-header"/>
-                
-                <VBox spacing="10" styleClass="form-container">
-                    <TextField fx:id="venueTypeField" promptText="Venue Type"/>
-                    <TextField fx:id="venueLocationField" promptText="Location"/>
-                    <TextField fx:id="venueCapacityField" promptText="Capacity"/>
-                    <Button text="Add Venue" onAction="#handleAddVenue" 
-                            styleClass="action-button, add-button"/>
-                </VBox>
-
-                <ListView fx:id="venueListView" VBox.vgrow="ALWAYS" 
-                         styleClass="venue-list">
-                    <effect>
-                        <DropShadow color="#00000022" radius="10" spread="0.1"/>
-                    </effect>
-                </ListView>
             </VBox>
         </HBox>
 
         <!-- Status Bar -->
         <HBox spacing="10" styleClass="status-bar">
-            <Label fx:id="statusLabel" styleClass="status-text"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="totalEventsLabel" styleClass="status-text"/>
+            <Label fx:id="statusLabel" styleClass="status-text" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="totalEventsLabel" styleClass="status-text" />
         </HBox>
     </VBox>
-</StackPane> 
+</StackPane>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="tn.esprit.pidev.controllers.WeatherDashboardController"
+          stylesheets="@../styles/weather-dashboard.css"
+          styleClass="main-container">
+
+    <VBox spacing="20" alignment="CENTER" styleClass="glass-panel">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER" spacing="15">
+            <Label text="Tunisia Weather" styleClass="header-text"/>
+            <Circle fx:id="weatherIcon" radius="30" styleClass="weather-icon"/>
+        </HBox>
+
+        <!-- Current Weather -->
+        <GridPane styleClass="weather-grid" hgap="20" vgap="10">
+            <Label text="Temperature:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="label-text"/>
+            <Label fx:id="tempLabel" text="--°C" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="value-text"/>
+            
+            <Label text="Humidity:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="label-text"/>
+            <Label fx:id="humidityLabel" text="--%"  GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="value-text"/>
+            
+            <Label text="Wind Speed:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="label-text"/>
+            <Label fx:id="windLabel" text="-- km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="value-text"/>
+            
+            <Label text="Condition:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="label-text"/>
+            <Label fx:id="conditionLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="value-text"/>
+        </GridPane>
+
+        <!-- Air Quality Section -->
+        <VBox spacing="10" styleClass="air-quality-section">
+            <Label text="Air Quality Index" styleClass="section-header"/>
+            <ProgressBar fx:id="aqiProgress" progress="0.0" styleClass="aqi-progress"/>
+            <Label fx:id="aqiLabel" text="Good" styleClass="aqi-text"/>
+        </VBox>
+
+        <!-- UV Index Section -->
+        <HBox spacing="15" alignment="CENTER" styleClass="uv-section">
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="UV Index" styleClass="section-header"/>
+                <Label fx:id="uvIndexLabel" text="0" styleClass="uv-value"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Visibility" styleClass="section-header"/>
+                <Label fx:id="visibilityLabel" text="-- km" styleClass="visibility-value"/>
+            </VBox>
+        </HBox>
+
+        <!-- Last Updated -->
+        <HBox alignment="CENTER_RIGHT">
+            <Label fx:id="lastUpdatedLabel" text="Last updated: --:--" styleClass="update-text"/>
+        </HBox>
+
+        <!-- Refresh Button -->
+        <Button text="Refresh" onAction="#refreshWeather" styleClass="refresh-button"/>
+    </VBox>
+
+</StackPane> 

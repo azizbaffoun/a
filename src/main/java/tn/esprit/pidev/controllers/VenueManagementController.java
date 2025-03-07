@@ -13,6 +13,8 @@ import tn.esprit.pidev.services.VenueService;
 import tn.esprit.pidev.services.WeatherService;
 import tn.esprit.pidev.services.LocationService;
 import tn.esprit.pidev.services.AnalyticsService;
+import tn.esprit.pidev.enums.TerrainType;
+import tn.esprit.pidev.enums.TerrainStatus;
 import org.json.JSONObject;
 
 import java.net.URL;
@@ -277,18 +279,23 @@ public class VenueManagementController implements Initializable {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField typeField = new TextField();
-        typeField.setPromptText("Venue type");
+        ComboBox<TerrainType> typeCombo = new ComboBox<>();
+        typeCombo.getItems().addAll(TerrainType.values());
+        typeCombo.setValue(TerrainType.TERRAIN);
+        typeCombo.setPromptText("Select venue type");
+        
         TextField locationField = new TextField();
         locationField.setPromptText("Location");
+        
         TextField capacityField = new TextField();
         capacityField.setPromptText("Capacity");
-        ComboBox<String> statusCombo = new ComboBox<>();
-        statusCombo.getItems().addAll("Disponible", "Réservé", "Maintenance");
-        statusCombo.setValue("Disponible");
+        
+        ComboBox<TerrainStatus> statusCombo = new ComboBox<>();
+        statusCombo.getItems().addAll(TerrainStatus.values());
+        statusCombo.setValue(TerrainStatus.DISPONIBLE);
 
         grid.add(new Label("Type:"), 0, 0);
-        grid.add(typeField, 1, 0);
+        grid.add(typeCombo, 1, 0);
         grid.add(new Label("Location:"), 0, 1);
         grid.add(locationField, 1, 1);
         grid.add(new Label("Capacity:"), 0, 2);
@@ -296,7 +303,7 @@ public class VenueManagementController implements Initializable {
         grid.add(new Label("Status:"), 0, 3);
         grid.add(statusCombo, 1, 3);
 
-        grid.getProperties().put("typeField", typeField);
+        grid.getProperties().put("typeCombo", typeCombo);
         grid.getProperties().put("locationField", locationField);
         grid.getProperties().put("capacityField", capacityField);
         grid.getProperties().put("statusCombo", statusCombo);
@@ -305,13 +312,13 @@ public class VenueManagementController implements Initializable {
     }
 
     private Venue getVenueFromDialog(GridPane grid) {
-        TextField typeField = (TextField) grid.getProperties().get("typeField");
+        ComboBox<TerrainType> typeCombo = (ComboBox<TerrainType>) grid.getProperties().get("typeCombo");
         TextField locationField = (TextField) grid.getProperties().get("locationField");
         TextField capacityField = (TextField) grid.getProperties().get("capacityField");
-        ComboBox<String> statusCombo = (ComboBox<String>) grid.getProperties().get("statusCombo");
+        ComboBox<TerrainStatus> statusCombo = (ComboBox<TerrainStatus>) grid.getProperties().get("statusCombo");
 
         // Validate required fields
-        if (typeField.getText().trim().isEmpty() || 
+        if (typeCombo.getValue() == null || 
             locationField.getText().trim().isEmpty() || 
             capacityField.getText().trim().isEmpty()) {
             throw new IllegalArgumentException("All fields are required");
@@ -329,7 +336,7 @@ public class VenueManagementController implements Initializable {
         }
 
         Venue venue = new Venue();
-        venue.setType(typeField.getText().trim());
+        venue.setType(typeCombo.getValue());
         venue.setLocalisation(locationField.getText().trim());
         venue.setCapacite(capacity);
         venue.setStatut(statusCombo.getValue());
@@ -338,12 +345,12 @@ public class VenueManagementController implements Initializable {
     }
 
     private void populateDialogWithVenue(GridPane grid, Venue venue) {
-        TextField typeField = (TextField) grid.getProperties().get("typeField");
+        ComboBox<TerrainType> typeCombo = (ComboBox<TerrainType>) grid.getProperties().get("typeCombo");
         TextField locationField = (TextField) grid.getProperties().get("locationField");
         TextField capacityField = (TextField) grid.getProperties().get("capacityField");
-        ComboBox<String> statusCombo = (ComboBox<String>) grid.getProperties().get("statusCombo");
+        ComboBox<TerrainStatus> statusCombo = (ComboBox<TerrainStatus>) grid.getProperties().get("statusCombo");
 
-        typeField.setText(venue.getType());
+        typeCombo.setValue(venue.getType());
         locationField.setText(venue.getLocalisation());
         capacityField.setText(String.valueOf(venue.getCapacite()));
         statusCombo.setValue(venue.getStatut());

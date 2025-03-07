@@ -196,6 +196,18 @@ public class AdminDashboardController implements Initializable {
     }
 
     @FXML
+    private void showWeatherDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/WeatherDashboard.fxml"));
+            Parent weatherView = loader.load();
+            contentArea.getChildren().setAll(weatherView);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("Error loading weather dashboard");
+        }
+    }
+
+    @FXML
     private void handleLogout() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));

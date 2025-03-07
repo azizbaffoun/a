@@ -1,0 +1,104 @@
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e);
+}
+
+.glass-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+    -fx-padding: 20;
+    -fx-min-width: 500;
+    -fx-max-width: 800;
+}
+
+.header-text {
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 255, 0.5), 10, 0, 0, 0);
+}
+
+.weather-icon {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 20, 0, 0, 0);
+}
+
+.weather-grid {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+}
+
+.label-text {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 16px;
+    -fx-text-fill: #8a8a8a;
+}
+
+.value-text {
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+}
+
+.air-quality-section, .uv-section {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+}
+
+.section-header {
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 20px;
+    -fx-text-fill: #00ffff;
+}
+
+.aqi-progress {
+    -fx-pref-height: 8px;
+}
+
+.aqi-progress .bar {
+    -fx-background-color: linear-gradient(to right, #00ff00, #ff0000);
+    -fx-background-radius: 4;
+}
+
+.aqi-progress .track {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 4;
+}
+
+.aqi-text {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+.uv-value, .visibility-value {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+}
+
+.update-text {
+    -fx-font-family: "Segoe UI Light";
+    -fx-font-size: 12px;
+    -fx-text-fill: #8a8a8a;
+}
+
+.refresh-button {
+    -fx-background-color: rgba(0, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.refresh-button:hover {
+    -fx-background-color: rgba(0, 255, 255, 0.3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 255, 0.5), 10, 0, 0, 0);
+}
+
+.refresh-button:pressed {
+    -fx-background-color: rgba(0, 255, 255, 0.4);
+} 
