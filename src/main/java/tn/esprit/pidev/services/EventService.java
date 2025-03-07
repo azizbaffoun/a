@@ -131,6 +131,8 @@ public class EventService {
         }
         
         event.setCapaciteMax(rs.getInt("participantsMax"));
+        event.setStatut(rs.getString("statut"));
+        event.setRecompense(rs.getString("recompense"));
         return event;
     }
 
@@ -168,7 +170,7 @@ public class EventService {
     }
 
     public boolean addEvent(Evenement event) {
-        String sql = "INSERT INTO evenement (nom, details, type, dateDebut, dateFin, participantsMax) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO evenement (nom, details, type, dateDebut, dateFin, participantsMax, statut) VALUES (?, ?, ?, ?, ?, ?, 'En cours')";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, event.getNom());
             pstmt.setString(2, event.getDescription());
@@ -210,6 +212,30 @@ public class EventService {
         } catch (SQLException e) {
             System.err.println("Error deleting event: " + e.getMessage());
             return false;
+        }
+    }
+
+    public ApiResponse<Boolean> createEvent(Evenement event) {
+        String query = "INSERT INTO evenement (nom, description, type, date_debut, date_fin, capacite_max, organisateur_id) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, event.getNom());
+            pstmt.setString(2, event.getDescription());
+            pstmt.setString(3, event.getType());
+            pstmt.setTimestamp(4, Timestamp.valueOf(event.getDateDebut()));
+            pstmt.setTimestamp(5, Timestamp.valueOf(event.getDateFin()));
+            pstmt.setInt(6, event.getCapaciteMax());
+            pstmt.setInt(7, event.getOrganisateurId());
+            
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return new ApiResponse<>(true, "Event created successfully", true);
+            } else {
+                return new ApiResponse<>(false, "Failed to create event", false);
+            }
+        } catch (Exception e) {
+            return new ApiResponse<>(false, "Error creating event: " + e.getMessage(), false);
         }
     }
 }

@@ -4,42 +4,68 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="tn.esprit.pidev.controllers.LoginController"
-            prefHeight="400.0" prefWidth="600.0"
-            style="-fx-background-color: #f4f4f4;">
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.controllers.LoginController"
+      style="-fx-background-color: white;"
+      stylesheets="@../styles/login.css">
     
-    <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0" 
-          AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" 
-          AnchorPane.rightAnchor="0">
-        
-        <padding>
-            <Insets top="20" right="40" bottom="20" left="40"/>
-        </padding>
-
-        <Text text="Event Management System" 
-              style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-        
-        <VBox alignment="CENTER" spacing="10" 
-              style="-fx-background-color: white; -fx-padding: 20; 
-                     -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
-              maxWidth="400">
+    <!-- Left side with illustration -->
+    <VBox alignment="CENTER" style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+        <ImageView fitWidth="400" preserveRatio="true">
+            <Image url="@../log.png"/>
+        </ImageView>
+    </VBox>
+    
+    <!-- Right side with login form -->
+    <VBox alignment="CENTER" style="-fx-background-color: #e8f5e9; -fx-padding: 40;" HBox.hgrow="ALWAYS">
+        <VBox maxWidth="400" spacing="20">
+            <!-- Logo and Title -->
+            <VBox alignment="CENTER" spacing="10">
+                <Text text="PaddlePro" 
+                      style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-fill: #1a5f7a;"/>
+                <Text text="Reserve Your Court, Play Your Game" 
+                      style="-fx-font-size: 16px; -fx-fill: #666;"/>
+            </VBox>
             
-            <Text text="Login" style="-fx-font-size: 18px;"/>
+            <Text text="LOGIN" 
+                  style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #1a5f7a;"/>
             
-            <TextField fx:id="usernameField" promptText="Email"
-                       style="-fx-pref-width: 250; -fx-pref-height: 35;"/>
-            
-            <PasswordField fx:id="passwordField" promptText="Password"
-                          style="-fx-pref-width: 250; -fx-pref-height: 35;"/>
-            
-            <Button text="Login" onAction="#handleLogin"
-                    style="-fx-background-color: #2196F3; -fx-text-fill: white; 
-                           -fx-pref-width: 250; -fx-pref-height: 35;"/>
+            <!-- Login Form -->
+            <VBox spacing="15">
+                <TextField fx:id="usernameField" promptText="Email Address"
+                          style="-fx-background-color: white; -fx-border-color: transparent; 
+                                 -fx-padding: 12; -fx-font-size: 14px;"/>
+                
+                <PasswordField fx:id="passwordField" promptText="Password"
+                             style="-fx-background-color: white; -fx-border-color: transparent; 
+                                    -fx-padding: 12; -fx-font-size: 14px;"/>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Text text="Sign Up" styleClass="clickable-text" 
+                          style="-fx-fill: #1a5f7a; -fx-font-size: 14px;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Text text="Forgot Password?" styleClass="clickable-text"
+                          style="-fx-fill: #1a5f7a; -fx-font-size: 14px;"/>
+                </HBox>
+                
+                <Button text="Sign In" onAction="#handleLogin"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; 
+                               -fx-padding: 12; -fx-font-size: 14px; -fx-background-radius: 4;"/>
+                
+                <HBox spacing="10" alignment="CENTER">
+                    <Text text="Privacy Policy" styleClass="clickable-text"
+                          style="-fx-fill: #666; -fx-font-size: 12px;"/>
+                    <Text text="•" style="-fx-fill: #666; -fx-font-size: 12px;"/>
+                    <Text text="Terms of Service" styleClass="clickable-text"
+                          style="-fx-fill: #666; -fx-font-size: 12px;"/>
+                </HBox>
+            </VBox>
             
             <Label fx:id="errorLabel" textFill="RED" wrapText="true"/>
         </VBox>
     </VBox>
-</AnchorPane> 
+</HBox> 

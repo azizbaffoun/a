@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.pidev.controllers.CreateEventController"
+      spacing="15" styleClass="create-event-form"
+      prefWidth="500" prefHeight="600">
+      
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <stylesheets>
+        <String fx:value="@../styles/admin-dashboard.css"/>
+    </stylesheets>
+    
+    <Text text="Create New Event" styleClass="form-title"/>
+    
+    <Label text="Event Name"/>
+    <TextField fx:id="nameField" promptText="Enter event name"/>
+    
+    <Label text="Description"/>
+    <TextArea fx:id="descriptionArea" promptText="Enter event description" wrapText="true"/>
+    
+    <Label text="Event Type"/>
+    <TextField fx:id="typeField" promptText="Enter event type (e.g., Tournament, Training)"/>
+    
+    <Label text="Maximum Capacity"/>
+    <TextField fx:id="capacityField" promptText="Enter maximum number of participants"/>
+    
+    <Label text="Start Date"/>
+    <DatePicker fx:id="startDatePicker"/>
+    
+    <Label text="End Date"/>
+    <DatePicker fx:id="endDatePicker"/>
+    
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+        <Button text="Create Event" onAction="#handleCreateEvent" styleClass="create-button"/>
+    </HBox>
+</VBox> 

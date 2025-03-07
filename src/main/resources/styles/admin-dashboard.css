@@ -1,0 +1,120 @@
+/* Sidebar Styles */
+.sidebar {
+    -fx-background-color: #1a5f7a;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-min-width: 250;
+}
+
+/* Main Container */
+.main-container {
+    -fx-background-color: white;
+    -fx-padding: 0;
+    -fx-spacing: 0;
+}
+
+.brand-container {
+    -fx-padding: 0 0 20 0;
+}
+
+.brand-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.brand-subtitle {
+    -fx-font-size: 14px;
+    -fx-fill: #e8f5e9;
+}
+
+.sidebar-separator {
+    -fx-background-color: #e8f5e9;
+    -fx-opacity: 0.2;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-max-width: infinity;
+    -fx-graphic-text-gap: 15;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.logout-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-max-width: infinity;
+    -fx-graphic-text-gap: 15;
+}
+
+.logout-button:hover {
+    -fx-background-color: #45a049;
+}
+
+/* Content Area Styles */
+.content-area {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 30;
+}
+
+.welcome-container {
+    -fx-padding: 20;
+}
+
+.welcome-text {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-fill: #1a5f7a;
+}
+
+.welcome-subtitle {
+    -fx-font-size: 16px;
+    -fx-fill: #666;
+}
+
+/* Statistics Cards */
+.stat-card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+    -fx-min-width: 200;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.stat-label {
+    -fx-font-size: 16px;
+    -fx-fill: #666;
+}
+
+.stat-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: #1a5f7a;
+}
+
+/* Global Emoji Styling */
+Text {
+    -fx-font-family: "Segoe UI Emoji";
+    -fx-font-size: 14px;
+}
+
+.emoji-icon {
+    -fx-font-size: 24px;
+} 

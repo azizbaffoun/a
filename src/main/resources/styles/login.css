@@ -1,0 +1,27 @@
+.text-field, .password-field {
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 0);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.button {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #45a049 !important;
+}
+
+.clickable-text {
+    -fx-cursor: hand;
+}
+
+.clickable-text:hover {
+    -fx-underline: true;
+} 

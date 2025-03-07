@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.esprit.pidev.controllers.ApiManagementController"
+            prefHeight="600.0" prefWidth="800.0">
+    
+    <top>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <spacing>10</spacing>
+            <Label text="API Management" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+    
+    <center>
+        <TabPane>
+            <tabs>
+                <!-- Weather API Tab -->
+                <Tab text="Weather APIs" closable="false">
+                    <VBox>
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                        <spacing>10</spacing>
+                        <HBox spacing="10">
+                            <ComboBox fx:id="weatherApiSelector" promptText="Select Weather API"/>
+                            <Button text="Test Connection" onAction="#testWeatherApi"/>
+                            <Label fx:id="weatherApiStatus"/>
+                        </HBox>
+                        
+                        <TitledPane text="API Configuration" expanded="true">
+                            <GridPane hgap="10" vgap="10">
+                                <Label text="API Key:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="weatherApiKey" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                
+                                <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="weatherLocation" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </GridPane>
+                        </TitledPane>
+                        
+                        <TitledPane text="Current Weather" expanded="true">
+                            <VBox spacing="10">
+                                <Label fx:id="temperatureLabel" text="Temperature: --"/>
+                                <Label fx:id="humidityLabel" text="Humidity: --"/>
+                                <Label fx:id="windLabel" text="Wind: --"/>
+                                <Label fx:id="conditionLabel" text="Condition: --"/>
+                                <Button text="Refresh Weather Data" onAction="#refreshWeatherData"/>
+                            </VBox>
+                        </TitledPane>
+                    </VBox>
+                </Tab>
+                
+                <!-- Maps API Tab -->
+                <Tab text="Maps APIs" closable="false">
+                    <VBox>
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                        <spacing>10</spacing>
+                        <HBox spacing="10">
+                            <ComboBox fx:id="mapsApiSelector" promptText="Select Maps API"/>
+                            <Button text="Test Connection" onAction="#testMapsApi"/>
+                            <Label fx:id="mapsApiStatus"/>
+                        </HBox>
+                        
+                        <TitledPane text="API Configuration" expanded="true">
+                            <GridPane>
+                                <padding>
+                                    <Insets top="10" right="10" bottom="10" left="10"/>
+                                </padding>
+                                <hgap>10</hgap>
+                                <vgap>10</vgap>
+                                <Label text="API Key:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="mapsApiKey" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            </GridPane>
+                        </TitledPane>
+                        
+                        <TitledPane text="Location Search" expanded="true">
+                            <VBox spacing="10">
+                                <HBox spacing="10">
+                                    <TextField fx:id="locationSearch" promptText="Enter location to search"
+                                             HBox.hgrow="ALWAYS"/>
+                                    <Button text="Search" onAction="#searchLocation"/>
+                                </HBox>
+                                <TableView fx:id="locationResults" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="locationNameColumn" text="Name"/>
+                                        <TableColumn fx:id="locationAddressColumn" text="Address"/>
+                                        <TableColumn fx:id="locationCoordinatesColumn" text="Coordinates"/>
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </TitledPane>
+                    </VBox>
+                </Tab>
+                
+                <!-- Analytics Tab -->
+                <Tab text="Analytics APIs" closable="false">
+                    <VBox>
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="10"/>
+                        </padding>
+                        <spacing>10</spacing>
+                        <TitledPane text="Google Analytics" expanded="true">
+                            <VBox spacing="10">
+                                <Label text="Track user behavior and event attendance patterns"/>
+                                <Button text="Configure Google Analytics" onAction="#configureGoogleAnalytics"/>
+                            </VBox>
+                        </TitledPane>
+                        
+                        <TitledPane text="Firebase Analytics" expanded="true">
+                            <VBox spacing="10">
+                                <Label text="Monitor user engagement and custom events"/>
+                                <Button text="Configure Firebase" onAction="#configureFirebase"/>
+                            </VBox>
+                        </TitledPane>
+                    </VBox>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+    
+    <bottom>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <spacing>10</spacing>
+            <Label fx:id="statusLabel" style="-fx-font-style: italic;"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane> 

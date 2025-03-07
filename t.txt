@@ -1,497 +1,210 @@
-COMPREHENSIVE IMPLEMENTATION GUIDE FOR PIDEV SYSTEM
-================================================
+PADDLEPRO ADVANCED FEATURES SPECIFICATION
+======================================
 
-1. DATABASE SCHEMA AND ENUMS
----------------------------
-A. Status Enums Implementation
------------------------------
-Create the following enum classes in src/main/java/tn/esprit/pidev/enums:
-
-```java
-// ReservationStatus.java
-public enum ReservationStatus {
-    CONFIRMEE("Confirmée"),
-    ANNULEE("Annulée");
-    
-    private final String value;
-    
-    ReservationStatus(String value) {
-        this.value = value;
-    }
-    
-    public String getValue() {
-        return value;
-    }
-}
-
-// Similar implementation for:
-// - MaterielStatus (Disponible, Réservé, Sous maintenance)
-// - BilletStatus (Valide, Annulé, Non valide)
-// - EmpruntStatus (Emprunté, Retourné, En retard)
-// - MaintenanceStatus (En cours, Terminé, Planifié)
-// - TerrainStatus (Disponible, Réservé, Maintenance)
-```
-
-B. Popup Control Types
----------------------
-```java
-public enum PopupControlType {
-    CONFIRMATION,
-    ERROR,
-    WARNING,
-    INFO,
-    MAINTENANCE_ALERT,
-    RESERVATION_CONFIRMATION,
-    DATE_ERROR,
-    VALIDATION_ERROR
-}
-```
-
-2. DATE VALIDATION IMPLEMENTATION
--------------------------------
-A. Core Date Validation Utility
-```java
-public class DateValidationUtils {
-    public static boolean isValidFutureDate(LocalDateTime date) {
-        return date != null && date.isAfter(LocalDateTime.now());
-    }
-    
-    public static boolean isValidDateRange(LocalDateTime start, LocalDateTime end) {
-        return start != null && end != null && 
-               start.isAfter(LocalDateTime.now()) && 
-               end.isAfter(start);
-    }
-}
-```
-
-B. Table-Specific Validation
-```java
-// Implement in respective service classes:
-- BilletService: dateAchat validation
-- EmpruntService: dateEmprunt and dateRetour validation
-- EvenementService: dateDebut and dateFin validation
-- MaintenanceService: dateMaintenance validation
-- ReservationService: dateReservation validation
-```
-
-3. CRUD OPERATIONS STANDARDIZATION
---------------------------------
-A. Base Response Structure
-```java
-public class ApiResponse<T> {
-    private boolean success;
-    private T data;
-    private String message;
-    private LocalDateTime timestamp;
-    private List<String> errors;
-}
-```
-
-B. Standard Service Interface
-```java
-public interface CrudService<T, ID> {
-    ApiResponse<T> create(T entity);
-    ApiResponse<T> read(ID id);
-    ApiResponse<List<T>> readAll();
-    ApiResponse<T> update(ID id, T entity);
-    ApiResponse<Boolean> delete(ID id);
-}
-```
-
-4. VALIDATION FRAMEWORK
-----------------------
-A. Entity Validators
-```java
-public interface EntityValidator<T> {
-    Optional<String> validate(T entity);
-    boolean isValid(T entity);
-}
-```
-
-B. Implementation Example
-```java
-@Component
-public class BilletValidator implements EntityValidator<Billet> {
-    @Override
-    public Optional<String> validate(Billet billet) {
-        StringBuilder errors = new StringBuilder();
-        
-        // Date validation
-        if (!DateValidationUtils.isValidFutureDate(billet.getDateAchat())) {
-            errors.append("Purchase date must be in the future\n");
-        }
-        
-        // Price validation
-        if (billet.getPrix() <= 0) {
-            errors.append("Price must be positive\n");
-        }
-        
-        // Quantity validation
-        if (billet.getQuantite() <= 0) {
-            errors.append("Quantity must be positive\n");
-        }
-        
-        return errors.length() > 0 ? Optional.of(errors.toString()) : Optional.empty();
-    }
-}
-```
-
-5. DATABASE CONSTRAINTS AND TRIGGERS
----------------------------------
-A. Add Date Constraints
-```sql
--- Add to your database migration scripts:
-
--- Billet date constraint
-ALTER TABLE billet
-ADD CONSTRAINT chk_billet_date
-CHECK (dateAchat >= CURRENT_TIMESTAMP);
-
--- Emprunt date constraints
-ALTER TABLE emprunt
-ADD CONSTRAINT chk_emprunt_dates
-CHECK (dateEmprunt <= dateRetour AND dateEmprunt >= CURRENT_DATE);
-
--- Event date constraints
-ALTER TABLE evenement
-ADD CONSTRAINT chk_event_dates
-CHECK (dateDebut <= dateFin AND dateDebut >= CURRENT_DATE);
-```
-
-B. Status Update Triggers
-```sql
-DELIMITER //
-
-CREATE TRIGGER before_reservation_update
-BEFORE UPDATE ON reservation
-FOR EACH ROW
-BEGIN
-    IF NEW.dateReservation < CURRENT_TIMESTAMP THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Cannot update reservation to past date';
-    END IF;
-END //
-
-DELIMITER ;
-```
-
-6. ERROR HANDLING
----------------
-A. Custom Exceptions
-```java
-public class ValidationException extends RuntimeException {
-    private final List<String> errors;
-    
-    public ValidationException(String message, List<String> errors) {
-        super(message);
-        this.errors = errors;
-    }
-}
-
-public class DateValidationException extends ValidationException {
-    public DateValidationException(String message) {
-        super(message, Collections.singletonList(message));
-    }
-}
-```
-
-B. Global Exception Handler
-```java
-@ControllerAdvice
-public class GlobalExceptionHandler {
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiResponse<Void>> handleValidationException(
-            ValidationException ex) {
-        ApiResponse<Void> response = new ApiResponse<>();
-        response.setSuccess(false);
-        response.setMessage("Validation failed");
-        response.setErrors(ex.getErrors());
-        return ResponseEntity.badRequest().body(response);
-    }
-}
-```
-
-7. IMPLEMENTATION CHECKLIST
--------------------------
-[ ] Database Schema Updates
-    [ ] Add date constraints
-    [ ] Add status constraints
-    [ ] Create triggers
-    [ ] Add indexes
-
-[ ] Core Components
-    [ ] Implement enums
-    [ ] Create validation utils
-    [ ] Set up error handling
-    [ ] Implement response structures
-
-[ ] Entity Validation
-    [ ] Billet validation
-    [ ] Emprunt validation
-    [ ] Evenement validation
-    [ ] Reservation validation
-    [ ] Maintenance validation
-
-[ ] Service Layer
-    [ ] Implement CRUD services
-    [ ] Add validation calls
-    [ ] Handle date checks
-    [ ] Add status management
-
-[ ] UI Components
-    [ ] Add date pickers
-    [ ] Implement status dropdowns
-    [ ] Add validation messages
-    [ ] Create popup controls
-
-8. TESTING REQUIREMENTS
----------------------
-A. Unit Tests
-```java
-@Test
-public void testDateValidation() {
-    LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
-    LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
-    
-    assertFalse(DateValidationUtils.isValidFutureDate(pastDate));
-    assertTrue(DateValidationUtils.isValidFutureDate(futureDate));
-}
-```
-
-B. Integration Tests
-```java
-@SpringBootTest
-public class ReservationServiceIntegrationTest {
-    @Test
-    public void testReservationCreation() {
-        Reservation reservation = new Reservation();
-        reservation.setDateReservation(LocalDateTime.now().plusDays(1));
-        
-        ApiResponse<Reservation> response = reservationService.create(reservation);
-        assertTrue(response.isSuccess());
-    }
-}
-```
-
-9. SECURITY MEASURES
-------------------
-A. Input Validation
-- Implement request validation
-- Add SQL injection prevention
-- Validate date formats
-- Check numeric ranges
-
-B. Access Control
-- Implement role-based access
-- Add audit logging
-- Secure sensitive operations
-
-10. MAINTENANCE GUIDELINES
+1. DYNAMIC PRICING SYSTEM
 ------------------------
-A. Code Organization
-- Follow package structure
-- Maintain consistent naming
-- Document changes
-- Update tests
+1.1 Time-based Pricing
+- Peak Hours (Weekdays 17:00-22:00): Base price + 30%
+- Off-peak Hours (Weekdays 06:00-16:00): Base price - 20%
+- Weekend Rates: Base price + 25%
+- Holiday Rates: Base price + 40%
+- Early Morning (06:00-08:00): Base price - 30%
 
-B. Database Maintenance
-- Regular backups
-- Index optimization
-- Query optimization
-- Status cleanup
+1.2 Demand-based Rates
+- High Demand (>80% occupancy): Additional 20% surge
+- Low Demand (<30% occupancy): 25% discount
+- Historical booking patterns analysis
+- Seasonal adjustments
+- Special event impact consideration
 
-11. DEPLOYMENT CONSIDERATIONS
----------------------------
-A. Database Updates
-- Create migration scripts
-- Test constraints
-- Verify triggers
-- Check indexes
+1.3 Package Deals
+- 10-Session Package: 15% discount
+- Monthly Unlimited: Fixed rate with priority booking
+- Group Training Package: 20% off for groups >4
+- Tournament Package: Includes court time + amenities
+- Corporate Packages: Customized rates for companies
 
-B. Application Updates
-- Version control
-- Documentation
-- Backup procedures
-- Rollback plans
+1.4 Membership Tiers
+Bronze:
+- Basic court access
+- Standard rates
+- 24h advance booking
 
-12. ADVANCED EVENT RECOMMENDATION ENGINE
--------------------------------------
-A. Recommendation Algorithm Components
-```java
-public class EventRecommendationEngine {
-    private static final double LOCATION_WEIGHT = 0.3;
-    private static final double EVENT_TYPE_WEIGHT = 0.4;
-    private static final double PARTICIPATION_WEIGHT = 0.3;
-    
-    public List<Evenement> getRecommendations(int userID) {
-        UserPreferences preferences = analyzeUserPreferences(userID);
-        return calculateRecommendations(preferences);
-    }
-}
-```
+Silver:
+- 10% discount on court bookings
+- 48h advance booking
+- Free equipment rental
 
-B. User Preference Analysis
-```java
-public class UserPreferences {
-    private Map<String, Double> eventTypePreferences; // PADEL, TENNIS
-    private Location preferredLocation;
-    private Map<LocalDateTime, Integer> participationFrequency;
-    private List<Integer> pastEventIds;
-}
+Gold:
+- 20% discount on all bookings
+- 72h advance booking
+- Priority court selection
+- Free guest passes
 
-public class PreferenceAnalyzer {
-    public UserPreferences analyzePreferences(int userID) {
-        // Analyze from database tables:
-        // - jointable (user participation history)
-        // - evenement (event types)
-        // - reservation (frequency)
-        return buildPreferenceProfile();
-    }
-}
-```
+Platinum:
+- 30% discount on all services
+- 7-day advance booking
+- Dedicate
 
-C. Database Queries for Analysis
-```sql
--- User participation history
-SELECT e.type, COUNT(*) as participation_count
-FROM jointable j
-JOIN evenement e ON j.eventID = e.ID
-WHERE j.userID = ?
-GROUP BY e.type;
+1.5 Special Event Pricing
+- Tournament Rates: Custom packages based on duration and court count
+- Training Camp Pricing: Bulk booking discounts
+- Exhibition Matches: Premium pricing + spectator arrangements
+- Private Events: Custom quotes based on requirements
+- Seasonal Promotions: Holiday specials and seasonal discounts
 
--- Location preferences
-SELECT t.localisation, COUNT(*) as location_count
-FROM reservationterrain rt
-JOIN terrain t ON rt.terrainID = t.courtID
-WHERE rt.userID = ?
-GROUP BY t.localisation;
-
--- Participation frequency
-SELECT MONTH(e.dateDebut) as month, COUNT(*) as monthly_count
-FROM jointable j
-JOIN evenement e ON j.eventID = e.ID
-WHERE j.userID = ?
-GROUP BY MONTH(e.dateDebut);
-```
-
-D. Scoring System
-```java
-public class EventScoring {
-    public double calculateEventScore(Evenement event, UserPreferences prefs) {
-        double typeScore = calculateTypeMatchScore(event, prefs);
-        double locationScore = calculateLocationScore(event, prefs);
-        double timeScore = calculateTimePreferenceScore(event, prefs);
-        
-        return (typeScore * EVENT_TYPE_WEIGHT) +
-               (locationScore * LOCATION_WEIGHT) +
-               (timeScore * PARTICIPATION_WEIGHT);
-    }
-}
-```
-
-E. Implementation Requirements
+2. WEATHER INTEGRATION SYSTEM
 ----------------------------
-1. Data Collection
-   [ ] Track user event views
-   [ ] Record participation history
-   [ ] Monitor location preferences
-   [ ] Store user feedback
+2.1 Court Condition Monitoring
+- Real-time weather data integration
+- Temperature and humidity tracking
+- Rain detection systems
+- Wind speed monitoring
+- UV index tracking for outdoor courts
 
-2. Analysis Components
-   [ ] Event type analysis
-   [ ] Location clustering
-   [ ] Temporal pattern recognition
-   [ ] Participation frequency analysis
+2.2 Automated Alerts
+- SMS/Email notifications for weather-related issues
+- Push notifications for immediate court conditions
+- Advance weather warnings (24h, 12h, 6h)
+- Severe weather alerts
+- Air quality notifications
 
-3. Recommendation Generation
-   [ ] Score calculation
-   [ ] Filtering logic
-   [ ] Ranking algorithm
-   [ ] Results caching
+2.3 Smart Rescheduling System
+- Automatic identification of available slots
+- Priority rescheduling for affected bookings
+- Alternative venue suggestions
+- Compensation handling for weather-related cancellations
+- Bulk rescheduling for tournaments
 
-4. Database Updates
-```sql
--- Add view tracking table
-CREATE TABLE event_views (
-    ID int PRIMARY KEY AUTO_INCREMENT,
-    userID int,
-    eventID int,
-    viewTimestamp datetime DEFAULT CURRENT_TIMESTAMP,
-    viewDuration int,
-    FOREIGN KEY (userID) REFERENCES utilisateur(ID),
-    FOREIGN KEY (eventID) REFERENCES evenement(ID)
-);
+2.4 Weather-based Maintenance
+- Preventive maintenance scheduling based on weather forecasts
+- Surface treatment scheduling
+- Climate-controlled facility management
+- Equipment protection protocols
+- Seasonal maintenance planning
 
--- Add user preferences table
-CREATE TABLE user_preferences (
-    userID int PRIMARY KEY,
-    preferredLocation text,
-    preferredEventTypes text,
-    lastUpdateTime datetime,
-    FOREIGN KEY (userID) REFERENCES utilisateur(ID)
-);
-```
+3. SMART CAPACITY MANAGEMENT
+---------------------------
+3.1 Dynamic Capacity Control
+- Real-time occupancy tracking
+- Automated capacity adjustments based on event type
+- Social distancing protocols when needed
+- Space optimization algorithms
+- Multi-court event management
 
-F. Performance Optimization
+3.2 Overflow Management
+- Waitlist system
+- Alternative venue suggestions
+- Automatic capacity redistribution
+- Peak time management
+- Emergency capacity protocols
+
+3.3 Space Allocation
+- Smart court assignment
+- Multi-space event handling
+- Equipment storage optimization
+- Facility zoning
+- Traffic flow management
+
+4. VENUE ANALYTICS
+-----------------
+4.1 Usage Analytics
+- Real-time occupancy tracking
+- Historical usage patterns
+- Peak time analysis
+- User demographic data
+- Equipment usage statistics
+
+4.2 Financial Analytics
+- Revenue per court
+- Cost per square meter
+- ROI analysis
+- Maintenance cost tracking
+- Pricing optimization data
+
+4.3 Performance Metrics
+- Court utilization rates
+- Customer satisfaction scores
+- Equipment efficiency
+- Energy consumption
+- Staff productivity
+
+5. VENUE MAINTENANCE SYSTEM
+--------------------------
+5.1 Predictive Maintenance
+- AI-driven maintenance scheduling
+- Usage-based maintenance alerts
+- Equipment lifespan tracking
+- Cost prediction models
+- Maintenance history analysis
+
+5.2 Issue Management
+- Mobile app for issue reporting
+- Photo/video documentation
+- Priority-based task assignment
+- Real-time status tracking
+- Resolution time monitoring
+
+5.3 Cost Tracking
+- Maintenance budget management
+- Vendor cost comparison
+- Parts inventory management
+- Labor cost tracking
+- ROI analysis for repairs vs replacement
+
+6. IMPLEMENTATION REQUIREMENTS
+----------------------------
+6.1 Technical Infrastructure
+- Cloud-based system
+- Real-time data processing
+- Mobile app integration
+- IoT sensors network
+- Backup systems
+
+6.2 Integration Points
+- Payment gateway integration
+- Weather API integration
+- CRM system integration
+- Accounting software integration
+- Mobile app synchronization
+
+6.3 Security Measures
+- Data encryption
+- User authentication
+- Payment security
+- Privacy compliance
+- Audit trails
+
+7. REPORTING AND ANALYTICS
 -------------------------
-1. Caching Strategy
-```java
-@Service
-public class RecommendationCacheService {
-    private Cache<Integer, List<Evenement>> userRecommendations;
-    
-    public void cacheRecommendations(int userID, List<Evenement> recommendations) {
-        userRecommendations.put(userID, recommendations);
-    }
-}
-```
+7.1 Standard Reports
+- Daily occupancy reports
+- Revenue analysis
+- Maintenance logs
+- Customer feedback
+- Equipment status
 
-2. Batch Processing
-```java
-@Scheduled(cron = "0 0 2 * * *") // Run at 2 AM daily
-public void updateRecommendations() {
-    List<Integer> activeUsers = getUsersNeedingUpdate();
-    processUserBatch(activeUsers);
-}
-```
+7.2 Custom Analytics
+- Custom date range analysis
+- Comparative period reports
+- Trend analysis
+- Forecasting reports
+- ROI calculations
 
-G. Testing Scenarios
-------------------
-```java
-@Test
-public void testRecommendationRelevance() {
-    // Given
-    int userID = 1;
-    createTestUserHistory(userID);
-    
-    // When
-    List<Evenement> recommendations = 
-        recommendationEngine.getRecommendations(userID);
-    
-    // Then
-    assertRecommendationQuality(recommendations, userID);
-}
-```
+8. FUTURE ENHANCEMENTS
+----------------------
+8.1 Planned Features
+- AI-powered booking recommendations
+- Virtual reality court tours
+- Automated marketing campaigns
+- Enhanced mobile features
+- Integrated social features
 
-H. Monitoring and Analytics
--------------------------
-1. Key Metrics
-   - Recommendation acceptance rate
-   - User engagement increase
-   - Event participation correlation
-   - Algorithm performance metrics
+8.2 Scalability Plans
+- Multi-location support
+- Franchise management
+- International expansion capabilities
+- API marketplace
+- Partner integration platform
 
-2. Feedback Loop
-```java
-public class RecommendationFeedback {
-    public void recordUserAction(int userID, int eventID, UserAction action) {
-        // Track user interactions with recommendations
-        // Update preference weights
-        // Adjust algorithm parameters
-    }
-}
-```
-
-This advanced recommendation engine will enhance user engagement by providing personalized event suggestions based on their historical interactions and preferences. The system continuously learns and adapts to user behavior to improve recommendation accuracy over time.
-
-Would you like me to provide more details about any specific component of the recommendation engine?
+Note: This specification is subject to updates based on business requirements and technical capabilities. Regular reviews and updates will be conducted to ensure alignment with business objectives and user needs.

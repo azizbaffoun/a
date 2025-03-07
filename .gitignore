@@ -1,7 +1,28 @@
+# Firebase credentials
+firebase-credentials.json
+
+# Compiled class files
+*.class
+
+# Build directories
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+build/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Environment variables
+.env
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -9,7 +30,6 @@ target/
 .idea/compiler.xml
 .idea/libraries/
 *.iws
-*.iml
 *.ipr
 
 ### Eclipse ###
@@ -27,7 +47,6 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 

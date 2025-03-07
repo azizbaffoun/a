@@ -5,11 +5,16 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.effect.*?>
+<?import java.net.URL?>
 
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="tn.esprit.pidev.controllers.EventManagementController"
            styleClass="main-container">
+
+    <stylesheets>
+        <URL value="@../styles/event-management.css"/>
+    </stylesheets>
 
     <VBox spacing="20" styleClass="content-container">
         <!-- Header -->
@@ -37,11 +42,10 @@
                     <columns>
                         <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
                         <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
-                        <TableColumn fx:id="detailsColumn" text="Details" prefWidth="200"/>
+                        <TableColumn fx:id="detailsColumn" text="Description" prefWidth="200"/>
                         <TableColumn fx:id="startDateColumn" text="Start Date" prefWidth="100"/>
                         <TableColumn fx:id="endDateColumn" text="End Date" prefWidth="100"/>
                         <TableColumn fx:id="typeColumn" text="Type" prefWidth="100"/>
-                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
                         <TableColumn fx:id="maxParticipantsColumn" text="Max Participants" prefWidth="120"/>
                     </columns>
                     <effect>

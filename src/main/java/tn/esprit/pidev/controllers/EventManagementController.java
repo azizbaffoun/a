@@ -15,6 +15,7 @@ import tn.esprit.pidev.models.Venue;
 import tn.esprit.pidev.services.EventService;
 import tn.esprit.pidev.services.VenueService;
 import javafx.util.Callback;
+import javafx.scene.Node;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -32,11 +33,9 @@ public class EventManagementController implements Initializable {
     @FXML private TableColumn<Evenement, Integer> idColumn;
     @FXML private TableColumn<Evenement, String> nameColumn;
     @FXML private TableColumn<Evenement, String> detailsColumn;
-    @FXML private TableColumn<Evenement, Date> startDateColumn;
-    @FXML private TableColumn<Evenement, Date> endDateColumn;
+    @FXML private TableColumn<Evenement, LocalDateTime> startDateColumn;
+    @FXML private TableColumn<Evenement, LocalDateTime> endDateColumn;
     @FXML private TableColumn<Evenement, String> typeColumn;
-    @FXML private TableColumn<Evenement, String> rewardColumn;
-    @FXML private TableColumn<Evenement, String> statusColumn;
     @FXML private TableColumn<Evenement, Integer> maxParticipantsColumn;
     @FXML private TextField searchField;
     @FXML private Label statusLabel;
@@ -51,7 +50,6 @@ public class EventManagementController implements Initializable {
     @FXML private TextField venueLocationField;
     @FXML private TextField venueCapacityField;
     @FXML private ListView<Venue> venueListView;
-    @FXML private VBox mainContainer;
 
     private EventService eventService;
     private VenueService venueService;
@@ -60,65 +58,66 @@ public class EventManagementController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        eventService = new EventService();
-        venueService = new VenueService();
-        setupTableColumns();
-        loadEvents();
-        loadVenues();
-        
-        // Add listener for selection changes
-        eventTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            selectedEvent = newSelection;
-            if (newSelection != null) {
-                populateFields(newSelection);
-            }
-        });
-        
-        // Add search functionality
-        searchField.textProperty().addListener((obs, oldText, newText) -> {
-            if (newText != null && !newText.isEmpty()) {
-                eventTable.getItems().setAll(eventService.searchEvents(newText));
-            } else {
-                loadEvents();
-            }
-        });
-
-        // Load CSS
-        mainContainer.getStylesheets().add(getClass().getResource("/styles/event-management.css").toExternalForm());
+        try {
+            eventService = new EventService();
+            venueService = new VenueService();
+            setupTableColumns();
+            loadEvents();
+            loadVenues();
+            
+            // Add listener for selection changes
+            eventTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+                selectedEvent = newSelection;
+                if (newSelection != null) {
+                    populateFields(newSelection);
+                }
+            });
+            
+            // Add search functionality
+            searchField.textProperty().addListener((obs, oldText, newText) -> {
+                if (newText != null && !newText.isEmpty()) {
+                    eventTable.getItems().setAll(eventService.searchEvents(newText));
+                } else {
+                    loadEvents();
+                }
+            });
+            
+            statusLabel.setText("Application initialized successfully");
+        } catch (Exception e) {
+            showError("Error initializing application: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setupTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        detailsColumn.setCellValueFactory(new PropertyValueFactory<>("details"));
+        detailsColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         startDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
         endDateColumn.setCellValueFactory(new PropertyValueFactory<>("dateFin"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        rewardColumn.setCellValueFactory(new PropertyValueFactory<>("recompense"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("statut"));
-        maxParticipantsColumn.setCellValueFactory(new PropertyValueFactory<>("participantsMax"));
+        maxParticipantsColumn.setCellValueFactory(new PropertyValueFactory<>("capaciteMax"));
 
-        // Format date columns
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        startDateColumn.setCellFactory(column -> new TableCell<Evenement, Date>() {
+        // Format date columns for LocalDateTime
+        startDateColumn.setCellFactory(column -> new TableCell<Evenement, LocalDateTime>() {
             @Override
-            protected void updateItem(Date item, boolean empty) {
+            protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(dateFormat.format(item));
+                    setText(item.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 }
             }
         });
-        endDateColumn.setCellFactory(column -> new TableCell<Evenement, Date>() {
+        endDateColumn.setCellFactory(column -> new TableCell<Evenement, LocalDateTime>() {
             @Override
-            protected void updateItem(Date item, boolean empty) {
+            protected void updateItem(LocalDateTime item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(dateFormat.format(item));
+                    setText(item.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 }
             }
         });
@@ -319,76 +318,127 @@ public class EventManagementController implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Event name");
+        nameField.setPromptText("Event Name");
         TextArea detailsArea = new TextArea();
-        detailsArea.setPromptText("Event details");
-        DatePicker startDatePicker = new DatePicker();
-        DatePicker endDatePicker = new DatePicker();
+        detailsArea.setPromptText("Event Details");
         TextField typeField = new TextField();
-        typeField.setPromptText("Event type");
-        TextField rewardField = new TextField();
-        rewardField.setPromptText("Reward");
-        ComboBox<String> statusCombo = new ComboBox<>();
-        statusCombo.getItems().addAll("En cours", "Terminé", "Annulé");
+        typeField.setPromptText("Event Type");
         TextField maxParticipantsField = new TextField();
-        maxParticipantsField.setPromptText("Maximum participants");
+        maxParticipantsField.setPromptText("Max Participants");
+        
+        // Create DatePickers with date validation
+        DatePicker startDatePicker = new DatePicker();
+        startDatePicker.setPromptText("Start Date");
+        DatePicker endDatePicker = new DatePicker();
+        endDatePicker.setPromptText("End Date");
+        
+        // Set minimum date to today for both date pickers
+        startDatePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+                setDisable(empty || date.compareTo(today) < 0);
+            }
+        });
+        
+        // End date can't be before start date
+        endDatePicker.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+                setDisable(empty || date.compareTo(today) < 0);
+            }
+        });
+        
+        // Add listeners for validation
+        startDatePicker.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && endDatePicker.getValue() != null && 
+                endDatePicker.getValue().isBefore(newVal)) {
+                endDatePicker.setValue(newVal);
+            }
+        });
+        
+        // Only allow numbers in max participants field
+        maxParticipantsField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.matches("\\d*")) {
+                maxParticipantsField.setText(newVal.replaceAll("[^\\d]", ""));
+            }
+        });
 
-        grid.add(new Label("Name:"), 0, 0);
+        grid.add(new Label("Name:*"), 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(new Label("Details:"), 0, 1);
+        grid.add(new Label("Details:*"), 0, 1);
         grid.add(detailsArea, 1, 1);
-        grid.add(new Label("Start Date:"), 0, 2);
-        grid.add(startDatePicker, 1, 2);
-        grid.add(new Label("End Date:"), 0, 3);
-        grid.add(endDatePicker, 1, 3);
-        grid.add(new Label("Type:"), 0, 4);
-        grid.add(typeField, 1, 4);
-        grid.add(new Label("Reward:"), 0, 5);
-        grid.add(rewardField, 1, 5);
-        grid.add(new Label("Status:"), 0, 6);
-        grid.add(statusCombo, 1, 6);
-        grid.add(new Label("Max Participants:"), 0, 7);
-        grid.add(maxParticipantsField, 1, 7);
-
-        // Store fields in the grid's properties for later retrieval
-        grid.getProperties().put("nameField", nameField);
-        grid.getProperties().put("detailsArea", detailsArea);
-        grid.getProperties().put("startDatePicker", startDatePicker);
-        grid.getProperties().put("endDatePicker", endDatePicker);
-        grid.getProperties().put("typeField", typeField);
-        grid.getProperties().put("rewardField", rewardField);
-        grid.getProperties().put("statusCombo", statusCombo);
-        grid.getProperties().put("maxParticipantsField", maxParticipantsField);
+        grid.add(new Label("Type:*"), 0, 2);
+        grid.add(typeField, 1, 2);
+        grid.add(new Label("Start Date:*"), 0, 3);
+        grid.add(startDatePicker, 1, 3);
+        grid.add(new Label("End Date:*"), 0, 4);
+        grid.add(endDatePicker, 1, 4);
+        grid.add(new Label("Max Participants:*"), 0, 5);
+        grid.add(maxParticipantsField, 1, 5);
 
         return grid;
     }
 
     private Evenement getEventFromDialog(GridPane grid) {
-        TextField nameField = (TextField) grid.getProperties().get("nameField");
-        TextArea detailsArea = (TextArea) grid.getProperties().get("detailsArea");
-        TextField typeField = (TextField) grid.getProperties().get("typeField");
-        DatePicker startDatePicker = (DatePicker) grid.getProperties().get("startDatePicker");
-        DatePicker endDatePicker = (DatePicker) grid.getProperties().get("endDatePicker");
-        TextField maxParticipantsField = (TextField) grid.getProperties().get("maxParticipantsField");
+        TextField nameField = (TextField) getNodeFromGridPane(grid, 1, 0);
+        TextArea detailsArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
+        TextField typeField = (TextField) getNodeFromGridPane(grid, 1, 2);
+        DatePicker startDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 3);
+        DatePicker endDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 4);
+        TextField maxParticipantsField = (TextField) getNodeFromGridPane(grid, 1, 5);
 
+        // Validate required fields
+        StringBuilder errors = new StringBuilder();
+        if (nameField.getText().trim().isEmpty()) errors.append("Name is required\n");
+        if (detailsArea.getText().trim().isEmpty()) errors.append("Details are required\n");
+        if (typeField.getText().trim().isEmpty()) errors.append("Type is required\n");
+        if (startDatePicker.getValue() == null) errors.append("Start date is required\n");
+        if (endDatePicker.getValue() == null) errors.append("End date is required\n");
+        if (maxParticipantsField.getText().trim().isEmpty()) errors.append("Max participants is required\n");
+
+        if (errors.length() > 0) {
+            showError(errors.toString());
+            return null;
+        }
+
+        // Validate dates
+        if (startDatePicker.getValue().isAfter(endDatePicker.getValue())) {
+            showError("End date must be after start date");
+            return null;
+        }
+
+        // Create event if validation passes
         Evenement event = new Evenement();
-        event.setNom(nameField.getText());
-        event.setDescription(detailsArea.getText());
-        event.setType(typeField.getText());
+        event.setNom(nameField.getText().trim());
+        event.setDescription(detailsArea.getText().trim());
+        event.setType(typeField.getText().trim());
         event.setDateDebut(startDatePicker.getValue().atStartOfDay());
         event.setDateFin(endDatePicker.getValue().atStartOfDay());
-        event.setCapaciteMax(Integer.parseInt(maxParticipantsField.getText()));
+        event.setCapaciteMax(Integer.parseInt(maxParticipantsField.getText().trim()));
         
         return event;
     }
 
+    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     private void populateDialogWithEvent(GridPane grid, Evenement event) {
-        TextField nameField = (TextField) grid.getProperties().get("nameField");
-        TextArea detailsArea = (TextArea) grid.getProperties().get("detailsArea");
-        TextField typeField = (TextField) grid.getProperties().get("typeField");
-        DatePicker startDatePicker = (DatePicker) grid.getProperties().get("startDatePicker");
-        DatePicker endDatePicker = (DatePicker) grid.getProperties().get("endDatePicker");
-        TextField maxParticipantsField = (TextField) grid.getProperties().get("maxParticipantsField");
+        TextField nameField = (TextField) getNodeFromGridPane(grid, 1, 0);
+        TextArea detailsArea = (TextArea) getNodeFromGridPane(grid, 1, 1);
+        TextField typeField = (TextField) getNodeFromGridPane(grid, 1, 2);
+        DatePicker startDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 3);
+        DatePicker endDatePicker = (DatePicker) getNodeFromGridPane(grid, 1, 4);
+        TextField maxParticipantsField = (TextField) getNodeFromGridPane(grid, 1, 5);
 
         nameField.setText(event.getNom());
         detailsArea.setText(event.getDescription());

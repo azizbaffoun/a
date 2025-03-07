@@ -13,6 +13,9 @@ public class Evenement {
     private int capaciteMax;
     private double prix;
     private String organisateur;
+    private String statut;
+    private String recompense;
+    private int organisateurId;
 
     public Evenement() {
     }
@@ -96,5 +99,29 @@ public class Evenement {
 
     public void setOrganisateur(String organisateur) {
         this.organisateur = organisateur;
+    }
+
+    public String getStatut() {
+        return statut;
+    }
+
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+    public String getRecompense() {
+        return recompense;
+    }
+
+    public void setRecompense(String recompense) {
+        this.recompense = recompense;
+    }
+
+    public int getOrganisateurId() {
+        return organisateurId;
+    }
+
+    public void setOrganisateurId(int organisateurId) {
+        this.organisateurId = organisateurId;
     }
 } 

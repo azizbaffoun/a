@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import tn.esprit.pidev.models.Event;
+import tn.esprit.pidev.models.Evenement;
 import tn.esprit.pidev.services.EventService;
 import tn.esprit.pidev.services.EventParticipantService;
 
@@ -13,12 +13,12 @@ import java.util.ResourceBundle;
 
 public class MyEventsController implements Initializable {
 
-    @FXML private TableView<Event> eventsTable;
-    @FXML private TableColumn<Event, Integer> idColumn;
-    @FXML private TableColumn<Event, String> nameColumn;
-    @FXML private TableColumn<Event, String> dateColumn;
-    @FXML private TableColumn<Event, String> typeColumn;
-    @FXML private TableColumn<Event, String> statusColumn;
+    @FXML private TableView<Evenement> eventsTable;
+    @FXML private TableColumn<Evenement, Integer> idColumn;
+    @FXML private TableColumn<Evenement, String> nameColumn;
+    @FXML private TableColumn<Evenement, String> dateColumn;
+    @FXML private TableColumn<Evenement, String> typeColumn;
+    @FXML private TableColumn<Evenement, String> statusColumn;
 
     private EventService eventService;
     private EventParticipantService participantService;
@@ -33,7 +33,7 @@ public class MyEventsController implements Initializable {
     }
 
     private void setupTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateDebut"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -47,7 +47,7 @@ public class MyEventsController implements Initializable {
 
     @FXML
     private void viewEventDetails() {
-        Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
+        Evenement selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) {
             showError("Please select an event to view");
             return;
@@ -57,7 +57,7 @@ public class MyEventsController implements Initializable {
 
     @FXML
     private void leaveEvent() {
-        Event selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
+        Evenement selectedEvent = eventsTable.getSelectionModel().getSelectedItem();
         if (selectedEvent == null) {
             showError("Please select an event to leave");
             return;

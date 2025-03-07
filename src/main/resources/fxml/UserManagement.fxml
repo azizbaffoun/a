@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.*?>
+<?import java.net.URL?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -41,7 +42,8 @@
 
     <!-- Users Table -->
     <TableView fx:id="userTable" VBox.vgrow="ALWAYS" 
-               style="-fx-font-family: 'Merriweather'; -fx-font-size: 13px;">
+               style="-fx-font-family: 'Merriweather'; -fx-font-size: 13px;"
+               styleClass="table-view">
         <columns>
             <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
             <TableColumn fx:id="nomColumn" text="Last Name" prefWidth="100"/>
@@ -54,9 +56,6 @@
             <TableColumn fx:id="nomOrganisationColumn" text="Organization" prefWidth="150"/>
             <TableColumn fx:id="photoProfilColumn" text="Photo" prefWidth="100"/>
         </columns>
-        <styleClass>
-            <String fx:value="table-view"/>
-        </styleClass>
     </TableView>
 
     <!-- Status Bar -->

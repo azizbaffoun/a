@@ -1,13 +1,13 @@
 package tn.esprit.pidev.interfaces;
 
-import tn.esprit.pidev.models.Event;
+import tn.esprit.pidev.models.Evenement;
 import java.util.List;
 
 public interface IEventService {
-    boolean addEvent(Event event);
-    boolean updateEvent(Event event);
+    boolean addEvent(Evenement event);
+    boolean updateEvent(Evenement event);
     boolean deleteEvent(int eventId);
-    Event getEventById(int eventId);
-    List<Event> getAllEvents();
-    List<Event> searchEvents(String keyword);
+    Evenement getEventById(int eventId);
+    List<Evenement> getAllEvents();
+    List<Evenement> searchEvents(String keyword);
 } 

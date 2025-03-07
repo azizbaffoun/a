@@ -6,8 +6,8 @@ import java.util.List;
 
 public class ApiResponse<T> {
     private boolean success;
-    private T data;
     private String message;
+    private T data;
     private LocalDateTime timestamp;
     private List<String> errors;
 
@@ -16,9 +16,10 @@ public class ApiResponse<T> {
         this.errors = new ArrayList<>();
     }
 
-    public ApiResponse(T data) {
+    public ApiResponse(boolean success, String message, T data) {
         this();
-        this.success = true;
+        this.success = success;
+        this.message = message;
         this.data = data;
     }
 
@@ -36,20 +37,20 @@ public class ApiResponse<T> {
         this.success = success;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
     }
 
     public LocalDateTime getTimestamp() {

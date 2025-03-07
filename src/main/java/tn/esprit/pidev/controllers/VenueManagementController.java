@@ -10,6 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import tn.esprit.pidev.models.Venue;
 import tn.esprit.pidev.services.VenueService;
+import tn.esprit.pidev.services.WeatherService;
+import tn.esprit.pidev.services.LocationService;
+import tn.esprit.pidev.services.AnalyticsService;
+import org.json.JSONObject;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -30,9 +34,26 @@ public class VenueManagementController implements Initializable {
     @FXML private Label statusLabel;
     @FXML private Label totalVenuesLabel;
     @FXML private Label availableVenuesLabel;
+    @FXML private Label weatherStatusLabel;
+    @FXML private Label maintenanceLabel;
 
     private VenueService venueService;
+    private WeatherService weatherService;
+    private LocationService locationService;
+    private AnalyticsService analyticsService;
     private ObservableList<Venue> venueList;
+
+    public void setWeatherService(WeatherService weatherService) {
+        this.weatherService = weatherService;
+    }
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
+    }
+
+    public void setAnalyticsService(AnalyticsService analyticsService) {
+        this.analyticsService = analyticsService;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -40,6 +61,31 @@ public class VenueManagementController implements Initializable {
         setupTableColumns();
         setupStatusFilter();
         loadVenues();
+
+        // Add selection listener for weather updates
+        venueTable.getSelectionModel().selectedItemProperty().addListener((obs, old, newVenue) -> {
+            if (newVenue != null) {
+                updateWeatherInfo(newVenue);
+            }
+        });
+    }
+
+    private void updateWeatherInfo(Venue venue) {
+        try {
+            // Get coordinates from location
+            LocationService.Location loc = locationService.getCoordinates(venue.getLocalisation());
+            
+            // Get weather info
+            boolean isPlaySafe = weatherService.isOutdoorPlaySafe(loc.getLatitude(), loc.getLongitude());
+            String maintenance = weatherService.getMaintenanceRecommendation(loc.getLatitude(), loc.getLongitude());
+            
+            // Update labels
+            weatherStatusLabel.setText("Weather Status: " + (isPlaySafe ? "Suitable for Play" : "Not Suitable"));
+            maintenanceLabel.setText("Maintenance: " + maintenance);
+            
+        } catch (Exception e) {
+            showError("Error updating weather info: " + e.getMessage());
+        }
     }
 
     private void setupTableColumns() {
@@ -91,7 +137,12 @@ public class VenueManagementController implements Initializable {
 
         dialog.setResultConverter(buttonType -> {
             if (buttonType == addButton) {
-                return getVenueFromDialog(grid);
+                try {
+                    return getVenueFromDialog(grid);
+                } catch (IllegalArgumentException e) {
+                    showError(e.getMessage());
+                    return null;
+                }
             }
             return null;
         });
@@ -259,10 +310,28 @@ public class VenueManagementController implements Initializable {
         TextField capacityField = (TextField) grid.getProperties().get("capacityField");
         ComboBox<String> statusCombo = (ComboBox<String>) grid.getProperties().get("statusCombo");
 
+        // Validate required fields
+        if (typeField.getText().trim().isEmpty() || 
+            locationField.getText().trim().isEmpty() || 
+            capacityField.getText().trim().isEmpty()) {
+            throw new IllegalArgumentException("All fields are required");
+        }
+
+        // Validate capacity is a positive number
+        int capacity;
+        try {
+            capacity = Integer.parseInt(capacityField.getText().trim());
+            if (capacity <= 0) {
+                throw new IllegalArgumentException("Capacity must be a positive number");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Capacity must be a valid number");
+        }
+
         Venue venue = new Venue();
-        venue.setType(typeField.getText());
-        venue.setLocalisation(locationField.getText());
-        venue.setCapacite(Integer.parseInt(capacityField.getText()));
+        venue.setType(typeField.getText().trim());
+        venue.setLocalisation(locationField.getText().trim());
+        venue.setCapacite(capacity);
         venue.setStatut(statusCombo.getValue());
 
         return venue;
