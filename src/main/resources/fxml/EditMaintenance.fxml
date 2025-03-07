@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EditMaintenanceController">
-    <children>
-        <Label text="Edit Maintenance" layoutX="14.0" layoutY="14.0" />
-        <ComboBox fx:id="materielComboBox" layoutX="14.0" layoutY="50.0" />
-        <DatePicker fx:id="dateMaintenancePicker" layoutX="14.0" layoutY="100.0" />
-        <TextArea fx:id="descriptionField" layoutX="14.0" layoutY="150.0" />
-        <TextField fx:id="coutField" layoutX="14.0" layoutY="250.0" />
-        <ComboBox fx:id="statutMaintenanceComboBox" layoutX="14.0" layoutY="300.0" />
-        <Button text="Save" layoutX="14.0" layoutY="350.0" onAction="#handleSave" />
-        <Button text="Cancel" layoutX="100.0" layoutY="350.0" onAction="#handleCancel" />
-    </children>
-</AnchorPane> 
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EditMaintenanceController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox spacing="20">
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label fx:id="listHeader" styleClass="list-header"/>
+            <ListView fx:id="maintenanceListView" VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <VBox spacing="10" prefWidth="400">
+            <GridPane hgap="10" vgap="10" styleClass="form-container">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Materiel:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="materielComboBox" promptText="Select materiel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Maintenance Date:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="dateMaintenancePicker" promptText="Select maintenance date" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextArea fx:id="descriptionField" promptText="Enter maintenance description" prefRowCount="3" wrapText="true" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Cost:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                <TextField fx:id="coutField" promptText="Enter maintenance cost" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="statutMaintenanceComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+                <padding>
+                    <Insets top="20" right="0" bottom="10" left="0"/>
+                </padding>
+                <Button text="Update" onAction="#handleUpdate" styleClass="button-primary"/>
+                <Button text="Delete" onAction="#handleDelete" styleClass="button-danger"/>
+                <Button text="Clear" onAction="#handleClear" styleClass="button-secondary"/>
+                <Button text="Back" onAction="#handleBack" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox> 

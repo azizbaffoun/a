@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.DeleteMaintenanceController">
-    <children>
-        <Label text="Delete Maintenance" layoutX="14.0" layoutY="14.0" />
-        <Label text="Are you sure you want to delete this Maintenance?" layoutX="14.0" layoutY="50.0" />
-        <Button text="Delete" layoutX="14.0" layoutY="100.0" onAction="#handleDelete" />
-        <Button text="Cancel" layoutX="100.0" layoutY="100.0" onAction="#handleCancel" />
-    </children>
-</AnchorPane> 
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="tn.esprit.jappa.controllers.DeleteMaintenanceController"
+      spacing="20" alignment="CENTER" styleClass="dialog-container">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Delete Maintenance" 
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+           
+    <Label text="Are you sure you want to delete this maintenance record?" 
+           wrapText="true" textAlignment="CENTER"/>
+           
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="Delete" onAction="#handleDelete" styleClass="button-danger"/>
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" styleClass="button-secondary"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@/styles/styles.css"/>
+    </stylesheets>
+</VBox> 

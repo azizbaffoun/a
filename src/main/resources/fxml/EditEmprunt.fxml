@@ -1,16 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EditEmpruntController">
-    <children>
-        <Label text="Edit Emprunt" layoutX="14.0" layoutY="14.0" />
-        <ComboBox fx:id="userIDComboBox" layoutX="14.0" layoutY="50.0" />
-        <ComboBox fx:id="materielComboBox" layoutX="14.0" layoutY="100.0" />
-        <DatePicker fx:id="dateEmpruntPicker" layoutX="14.0" layoutY="150.0" />
-        <DatePicker fx:id="dateRetourPicker" layoutX="14.0" layoutY="200.0" />
-        <ComboBox fx:id="statutEmpruntComboBox" layoutX="14.0" layoutY="250.0" />
-        <Button text="Save" layoutX="14.0" layoutY="300.0" onAction="#handleSave" />
-        <Button text="Cancel" layoutX="100.0" layoutY="300.0" onAction="#handleCancel" />
-    </children>
-</AnchorPane> 
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.EditEmpruntController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox spacing="20">
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label fx:id="listHeader" styleClass="list-header"/>
+            <ListView fx:id="empruntListView" VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <VBox spacing="10" prefWidth="400">
+            <GridPane hgap="10" vgap="10" styleClass="form-container">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="User:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="userComboBox" promptText="Select user" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Equipment:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="materielComboBox" promptText="Select equipment" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Loan Date:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="dateEmpruntPicker" promptText="Select loan date" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Return Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                <DatePicker fx:id="dateRetourPicker" promptText="Select return date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+                <ComboBox fx:id="statutEmpruntComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+                <padding>
+                    <Insets top="20" right="0" bottom="10" left="0"/>
+                </padding>
+                <Button text="Update" onAction="#handleUpdate" styleClass="button-primary"/>
+                <Button text="Delete" onAction="#handleDelete" styleClass="button-danger"/>
+                <Button text="Clear" onAction="#handleClear" styleClass="button-secondary"/>
+                <Button text="Back" onAction="#handleBack" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox> 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.StatisticsController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Date Range:" />
+        <DatePicker fx:id="startDatePicker" promptText="Start Date"/>
+        <DatePicker fx:id="endDatePicker" promptText="End Date"/>
+        <Button text="Refresh Stats" onAction="#handleRefresh"/>
+    </HBox>
+
+    <TabPane VBox.vgrow="ALWAYS">
+        <Tab text="Equipment Usage" closable="false">
+            <VBox spacing="10">
+                <BarChart fx:id="usageChart" title="Equipment Usage Statistics">
+                    <xAxis>
+                        <CategoryAxis label="Equipment ID"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Number of Loans"/>
+                    </yAxis>
+                </BarChart>
+                <TableView fx:id="usageTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="equipmentIdColumn" text="Equipment ID"/>
+                        <TableColumn fx:id="equipmentTypeColumn" text="Type"/>
+                        <TableColumn fx:id="loanCountColumn" text="Total Loans"/>
+                        <TableColumn fx:id="lastLoanColumn" text="Last Loan Date"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+        <Tab text="Maintenance Stats" closable="false">
+            <VBox spacing="10">
+                <PieChart fx:id="maintenanceChart" title="Maintenance Distribution"/>
+                <TableView fx:id="maintenanceTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="maintEquipmentIdColumn" text="Equipment ID"/>
+                        <TableColumn fx:id="maintenanceCountColumn" text="Maintenance Count"/>
+                        <TableColumn fx:id="lastMaintenanceColumn" text="Last Maintenance"/>
+                        <TableColumn fx:id="statusColumn" text="Current Status"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Export Report" onAction="#handleExport"/>
+        <Button text="Back" onAction="#handleBack"/>
+    </HBox>
+</VBox> 

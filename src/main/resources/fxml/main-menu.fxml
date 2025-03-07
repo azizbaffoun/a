@@ -30,5 +30,11 @@
                 <Insets top="15" right="30" bottom="15" left="30"/>
             </padding>
         </Button>
+
+        <Button text="Analytics Dashboard" onAction="#handleStatisticsMenu" maxWidth="Infinity" styleClass="menu-button">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
     </VBox>
 </VBox> 

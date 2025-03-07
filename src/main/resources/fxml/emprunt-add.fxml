@@ -43,5 +43,6 @@
         </padding>
         <Button text="Add Loan" onAction="#handleAdd" styleClass="button-primary"/>
         <Button text="Clear Form" onAction="#handleClear" styleClass="button-secondary"/>
+        <Button text="Back" onAction="#handleBack" styleClass="button-secondary"/>
     </HBox>
 </VBox> 

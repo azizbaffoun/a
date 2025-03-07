@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.AddMaterielController">
-    <children>
-        <Label text="Add New Material" layoutX="14.0" layoutY="14.0" />
-        <TextField fx:id="typeField" layoutX="14.0" layoutY="50.0" />
-        <TextField fx:id="typeSportField" layoutX="14.0" layoutY="100.0" />
-        <TextField fx:id="prixField" layoutX="14.0" layoutY="150.0" />
-        <DatePicker fx:id="dateReservationPicker" layoutX="14.0" layoutY="200.0" />
-        <ComboBox fx:id="statutMaterielComboBox" layoutX="14.0" layoutY="250.0" />
-        <Button text="Add" layoutX="14.0" layoutY="300.0" onAction="#handleAdd" />
-        <Button text="Cancel" layoutX="100.0" layoutY="300.0" onAction="#handleCancel" />
-    </children>
-</AnchorPane> 
+<VBox spacing="10" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.AddMaterielController">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10" styleClass="form-container">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="typeField" promptText="Enter equipment type" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Sport Type:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="typeSportField" promptText="Enter sport type" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Price:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="prixField" promptText="Enter price" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Reservation Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+        <DatePicker fx:id="dateReservationPicker" promptText="Select reservation date" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="statutComboBox" promptText="Select status" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+        <Label text="Owner Type:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ComboBox fx:id="ownerTypeComboBox" promptText="Select owner type" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+        <padding>
+            <Insets top="20" right="0" bottom="10" left="0"/>
+        </padding>
+        <Button text="Add Equipment" onAction="#handleAdd" styleClass="button-primary"/>
+        <Button text="Clear Form" onAction="#handleClear" styleClass="button-secondary"/>
+        <Button text="Back" onAction="#handleBack" styleClass="button-secondary"/>
+    </HBox>
+</VBox> 

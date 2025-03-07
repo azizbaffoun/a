@@ -30,6 +30,12 @@
                 <Insets top="15" right="30" bottom="15" left="30"/>
             </padding>
         </Button>
+
+        <Button text="QR Code Management" onAction="#handleQRCodeManagement" maxWidth="Infinity" styleClass="menu-button">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+        </Button>
         
         <Button text="Back to Main Menu" onAction="#handleBackToMain" maxWidth="Infinity" styleClass="menu-button-secondary">
             <padding>

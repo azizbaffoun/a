@@ -17,6 +17,7 @@
             <Label text="Materials List" styleClass="section-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
             <Label fx:id="listHeader" styleClass="list-header"/>
             <ListView fx:id="materielListView" VBox.vgrow="ALWAYS"/>
+            <Button text="Generate QR Code" onAction="#handleQRCode" styleClass="button-primary"/>
         </VBox>
 
         <!-- Edit Form Section -->

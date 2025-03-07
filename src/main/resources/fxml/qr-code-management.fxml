@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox spacing="20" styleClass="main-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="tn.esprit.jappa.controllers.QRCodeManagementController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="QR Code Management" styleClass="page-title" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- List View Section -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="300">
+            <Label text="Materials List" styleClass="section-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <ListView fx:id="materielListView" VBox.vgrow="ALWAYS"/>
+            <HBox spacing="10">
+                <Button text="Generate QR Code" onAction="#handleGenerateQRCode" styleClass="button-primary"/>
+                <Button text="Save All QR Codes" onAction="#handleSaveAllQRCodes" styleClass="button-primary"/>
+            </HBox>
+        </VBox>
+
+        <!-- QR Code Preview Section -->
+        <VBox spacing="10" HBox.hgrow="ALWAYS">
+            <Label text="QR Code Preview" styleClass="section-title" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <ImageView fx:id="qrCodeImageView" fitWidth="300" fitHeight="300" preserveRatio="true"/>
+            <TextArea fx:id="historyTextArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Back" onAction="#handleBack" styleClass="button-secondary"/>
+    </HBox>
+</VBox> 
